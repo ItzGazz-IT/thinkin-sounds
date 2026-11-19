@@ -1,0 +1,24 @@
+.brand {
+  display: flex;
+  align-items: center;
+  height: 72px;
+}
+
+.brand img {
+  width: 122px;
+  height: 72px;
+  object-fit: contain;
+}
+
+footer > img {
+  width: 138px;
+  height: auto;
+}
+
+@media (max-width: 600px) {
+  .brand,
+  .brand img {
+    width: 94px;
+    height: 58px;
+  }
+}
