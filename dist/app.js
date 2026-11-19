@@ -5,3 +5,10 @@ nav.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{nav.c
 document.querySelectorAll('[data-service]').forEach(link=>link.addEventListener('click',()=>{const service=document.querySelector('#service');service.value=link.dataset.service;setTimeout(()=>service.focus(),250)}));
 document.querySelector('#year').textContent=new Date().getFullYear();
 document.querySelector('#enquiry-form').addEventListener('submit',event=>{event.preventDefault();const status=event.currentTarget.querySelector('.form-status');status.hidden=false;status.textContent='Enquiry form ready — inbox delivery will be connected before launch.'});
+const musicScrollNote=document.querySelector('.music-scroll-note');
+const backToTop=document.querySelector('.back-to-top');
+const updateScrollUI=()=>{const maxScroll=document.documentElement.scrollHeight-window.innerHeight;const progress=maxScroll>0?window.scrollY/maxScroll:0;const railTravel=Math.max(0,window.innerHeight-68);musicScrollNote.style.transform=`translate(-50%, ${Math.round(progress*railTravel)}px)`;backToTop.classList.toggle('is-visible',window.scrollY>500)};
+window.addEventListener('scroll',updateScrollUI,{passive:true});
+window.addEventListener('resize',updateScrollUI);
+backToTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}));
+updateScrollUI();
