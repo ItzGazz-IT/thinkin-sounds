@@ -254,6 +254,20 @@ body::-webkit-scrollbar {
   text-transform: uppercase;
 }
 
+.studio-copy .button-dark {
+  background: #09090b;
+  color: #fff;
+  border: 2px solid #09090b;
+}
+
+.studio-copy .button-dark:hover,
+.studio-copy .button-dark:focus-visible {
+  background: #fff;
+  color: #09090b;
+  border-color: #09090b;
+  outline: none;
+}
+
 @media (max-width: 900px) {
   .artist-showcase-heading {
     grid-template-columns: 1fr;
