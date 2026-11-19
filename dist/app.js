@@ -4,7 +4,30 @@ toggle.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expand
 nav.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{nav.classList.remove('open');toggle.setAttribute('aria-expanded','false')}));
 document.querySelectorAll('[data-service]').forEach(link=>link.addEventListener('click',()=>{const service=document.querySelector('#service');service.value=link.dataset.service;setTimeout(()=>service.focus(),250)}));
 document.querySelector('#year').textContent=new Date().getFullYear();
-document.querySelector('#enquiry-form').addEventListener('submit',event=>{event.preventDefault();const status=event.currentTarget.querySelector('.form-status');status.hidden=false;status.textContent='Enquiry form ready — inbox delivery will be connected before launch.'});
+document.querySelector('#enquiry-form').addEventListener('submit',event=>{
+  event.preventDefault();
+  const form=event.currentTarget;
+  const data=new FormData(form);
+  const value=name=>String(data.get(name)||'').trim();
+  const lines=[
+    'Hi Thinkin’ Sounds, I’d like to make an enquiry.',
+    '',
+    `Name / artist: ${value('name')}`,
+    `Contact: ${value('contact')}`,
+    `Service: ${value('service')}`,
+    `Track count: ${value('tracks')||'Not specified'}`,
+    `Preferred date: ${value('preferred_date')||'Flexible'}`,
+    `Target release: ${value('release_date')||'Not specified'}`,
+    `Private demo: ${value('demo')||'None yet'}`,
+    '',
+    `Project notes: ${value('notes')}`
+  ];
+  const recipient=value('recipient')||'27826535019';
+  const status=form.querySelector('.form-status');
+  status.hidden=false;
+  status.textContent='WhatsApp opened with your enquiry. Review the message there before sending.';
+  window.open(`https://wa.me/${recipient}?text=${encodeURIComponent(lines.join('\n'))}`,'_blank','noopener');
+});
 const musicScrollNote=document.querySelector('.music-scroll-note');
 const backToTop=document.querySelector('.back-to-top');
 const musicScroll=document.querySelector('.music-scroll');
