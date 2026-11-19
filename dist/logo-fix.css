@@ -54,7 +54,9 @@ body::-webkit-scrollbar {
   height: calc(100vh - 36px);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.16);
-  pointer-events: none;
+  pointer-events: auto;
+  cursor: pointer;
+  touch-action: none;
 }
 
 .music-scroll-note {
@@ -75,6 +77,81 @@ body::-webkit-scrollbar {
   box-shadow: 0 5px 18px rgba(0, 0, 0, 0.45);
   transform: translate(-50%, 0);
   will-change: transform;
+  cursor: grab;
+  user-select: none;
+}
+
+.music-scroll.is-dragging .music-scroll-note {
+  cursor: grabbing;
+  box-shadow: 0 0 0 5px rgba(255, 9, 144, 0.2), 0 8px 24px rgba(0, 0, 0, 0.55);
+}
+
+.music-scroll:focus-visible {
+  outline: 2px solid #ffc800;
+  outline-offset: 7px;
+}
+
+.hero-price {
+  appearance: none;
+  background: rgba(9, 9, 11, 0.55);
+  color: #fff;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+}
+
+.hero-price::before,
+.hero-price::after {
+  content: '';
+  position: absolute;
+  inset: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+}
+
+.hero-price::after {
+  inset: 20px;
+  border-style: dashed;
+  animation: price-spin 14s linear infinite;
+}
+
+.hero-price > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-price .price-kicker,
+.hero-price .price-duration {
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+}
+
+.hero-price small {
+  margin-top: 2px;
+  color: #bdbbc5;
+  font-size: 0.56rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero-price:hover,
+.hero-price:focus-visible {
+  border-color: #ffc800;
+  box-shadow: 0 0 0 5px rgba(255, 200, 0, 0.12), 0 20px 45px rgba(0, 0, 0, 0.35);
+  transform: rotate(0deg) scale(1.05);
+  outline: none;
+}
+
+.hero-price.is-changing strong {
+  animation: price-pop 0.28s ease;
+}
+
+@keyframes price-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes price-pop {
+  50% { transform: scale(1.2); color: #ff0990; }
 }
 
 .back-to-top {
@@ -140,5 +217,10 @@ body::-webkit-scrollbar {
 @media (prefers-reduced-motion: reduce) {
   .back-to-top {
     transition: none;
+  }
+
+  .hero-price::after,
+  .hero-price.is-changing strong {
+    animation: none;
   }
 }
