@@ -15,6 +15,27 @@ footer > img {
   height: auto;
 }
 
+.contact-details .whatsapp-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  text-decoration-color: rgba(255, 255, 255, 0.55);
+  text-underline-offset: 5px;
+}
+
+.whatsapp-link svg {
+  width: 23px;
+  height: 23px;
+  flex: 0 0 23px;
+  fill: #25d366;
+}
+
+.whatsapp-link:hover,
+.whatsapp-link:focus-visible {
+  color: #25d366;
+}
+
 @media (max-width: 600px) {
   .brand,
   .brand img {
