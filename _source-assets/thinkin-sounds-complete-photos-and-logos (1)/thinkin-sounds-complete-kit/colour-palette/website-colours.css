@@ -1,0 +1,10 @@
+:root {
+  --brand-golden-yellow: #FFC800;
+  --brand-orange: #FF7D00;
+  --brand-coral: #FF3E49;
+  --brand-hot-pink: #FF0990;
+  --brand-violet: #7245E5;
+  --brand-black: #000000;
+  --brand-white: #FFFFFF;
+  --brand-gradient: linear-gradient(90deg, #FFC800, #FF7D00, #FF3E49, #FF0990, #7245E5);
+}
