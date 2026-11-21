@@ -142,3 +142,7 @@
 .featured-beats > .button {
   margin-top: 28px;
 }
+
+.inner-page .site-header {
+  background: var(--black);
+}
