@@ -2,49 +2,60 @@ const toggle=document.querySelector('.nav-toggle');
 const nav=document.querySelector('#site-nav');
 toggle.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')==='true';toggle.setAttribute('aria-expanded',String(!open));nav.classList.toggle('open',!open)});
 nav.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{nav.classList.remove('open');toggle.setAttribute('aria-expanded','false')}));
-const serviceField = document.querySelector('#service');
-const beatField = document.querySelector('#enquiry-beat');
-const setEnquiryBeat = title => {
-  beatField.value = title;
-  beatField.disabled = !title;
-  beatField.parentElement.hidden = !title;
-};
-document.querySelectorAll('[data-service]').forEach(link => {
-  link.addEventListener('click', () => {
-    serviceField.value = link.dataset.service;
-    setEnquiryBeat(link.dataset.beat || '');
-    setTimeout(() => serviceField.focus(), 250);
+document.querySelector('#year').textContent = new Date().getFullYear();
+const enquiryForm = document.querySelector('#enquiry-form');
+if (enquiryForm) {
+  const serviceField = document.querySelector('#service');
+  const beatField = document.querySelector('#enquiry-beat');
+  const setEnquiryBeat = title => {
+    beatField.value = title;
+    beatField.disabled = !title;
+    beatField.parentElement.hidden = !title;
+  };
+  document.querySelectorAll('[data-service]').forEach(link => {
+    link.addEventListener('click', () => {
+      serviceField.value = link.dataset.service;
+      setEnquiryBeat('');
+      setTimeout(() => serviceField.focus(), 250);
+    });
   });
-});
-serviceField.addEventListener('change', () => {
-  if (serviceField.value !== 'Beat enquiry') setEnquiryBeat('');
-});
-document.querySelector('#year').textContent=new Date().getFullYear();
-document.querySelector('#enquiry-form').addEventListener('submit',event=>{
-  event.preventDefault();
-  const form=event.currentTarget;
-  const data=new FormData(form);
-  const value=name=>String(data.get(name)||'').trim();
-  const lines=[
-    'Hi Thinkin’ Sounds, I’d like to make an enquiry.',
-    '',
-    `Name / artist: ${value('name')}`,
-    `Contact: ${value('contact')}`,
-    `Service: ${value('service')}`,
-    ...(value('beat') ? [`Beat: ${value('beat')} by ItzGazz`] : []),
-    `Track count: ${value('tracks')||'Not specified'}`,
-    `Preferred date: ${value('preferred_date')||'Flexible'}`,
-    `Target release: ${value('release_date')||'Not specified'}`,
-    `Private demo: ${value('demo')||'None yet'}`,
-    '',
-    `Project notes: ${value('notes')}`
-  ];
-  const recipient=value('recipient')||'27826535019';
-  const status=form.querySelector('.form-status');
-  status.hidden=false;
-  status.textContent='WhatsApp opened with your enquiry. Review the message there before sending.';
-  window.open(`https://wa.me/${recipient}?text=${encodeURIComponent(lines.join('\n'))}`,'_blank','noopener');
-});
+  serviceField.addEventListener('change', () => {
+    if (serviceField.value !== 'Beat enquiry') setEnquiryBeat('');
+  });
+  const enquiryParams = new URLSearchParams(location.search);
+  const selectedBeat = enquiryParams.get('beat')?.trim().slice(0, 100);
+  if (selectedBeat) {
+    serviceField.value = 'Beat enquiry';
+    setEnquiryBeat(selectedBeat);
+  } else if (enquiryParams.get('service') === 'custom-beat') {
+    serviceField.value = 'Custom beat';
+  }
+  enquiryForm.addEventListener('submit',event=>{
+    event.preventDefault();
+    const form=event.currentTarget;
+    const data=new FormData(form);
+    const value=name=>String(data.get(name)||'').trim();
+    const lines=[
+      'Hi Thinkin’ Sounds, I’d like to make an enquiry.',
+      '',
+      `Name / artist: ${value('name')}`,
+      `Contact: ${value('contact')}`,
+      `Service: ${value('service')}`,
+      ...(value('beat') ? [`Beat: ${value('beat')} by ItzGazz`] : []),
+      `Track count: ${value('tracks')||'Not specified'}`,
+      `Preferred date: ${value('preferred_date')||'Flexible'}`,
+      `Target release: ${value('release_date')||'Not specified'}`,
+      `Private demo: ${value('demo')||'None yet'}`,
+      '',
+      `Project notes: ${value('notes')}`
+    ];
+    const recipient=value('recipient')||'27826535019';
+    const status=form.querySelector('.form-status');
+    status.hidden=false;
+    status.textContent='WhatsApp opened with your enquiry. Review the message there before sending.';
+    window.open(`https://wa.me/${recipient}?text=${encodeURIComponent(lines.join('\n'))}`,'_blank','noopener');
+  });
+}
 const musicScrollNote=document.querySelector('.music-scroll-note');
 const backToTop=document.querySelector('.back-to-top');
 const musicScroll=document.querySelector('.music-scroll');
@@ -61,10 +72,67 @@ musicScroll.addEventListener('pointerup',stopScrollDrag);
 musicScroll.addEventListener('pointercancel',stopScrollDrag);
 musicScroll.addEventListener('keydown',event=>{const max=document.documentElement.scrollHeight-window.innerHeight;const keys={ArrowDown:80,ArrowUp:-80,PageDown:window.innerHeight*.8,PageUp:-window.innerHeight*.8,Home:-window.scrollY,End:max-window.scrollY};if(keys[event.key]!==undefined){event.preventDefault();window.scrollBy({top:keys[event.key],behavior:'auto'})}});
 const heroPrice=document.querySelector('.hero-price');
-const priceOptions=[{price:'R150',duration:'1 hour'},{price:'R250',duration:'2 hours'},{price:'R400',duration:'4 hours'}];
-let priceIndex=0;
-heroPrice.addEventListener('click',()=>{priceIndex=(priceIndex+1)%priceOptions.length;const option=priceOptions[priceIndex];heroPrice.classList.remove('is-changing');void heroPrice.offsetWidth;heroPrice.querySelector('strong').textContent=option.price;heroPrice.querySelector('.price-duration').textContent=option.duration;heroPrice.classList.add('is-changing');heroPrice.setAttribute('aria-label',`Recording session price ${option.price} for ${option.duration}. Activate to compare the next option.`)});
+if (heroPrice) {
+  const priceOptions=[{price:'R150',duration:'1 hour'},{price:'R250',duration:'2 hours'},{price:'R400',duration:'4 hours'}];
+  let priceIndex=0;
+  heroPrice.addEventListener('click',()=>{priceIndex=(priceIndex+1)%priceOptions.length;const option=priceOptions[priceIndex];heroPrice.classList.remove('is-changing');void heroPrice.offsetWidth;heroPrice.querySelector('strong').textContent=option.price;heroPrice.querySelector('.price-duration').textContent=option.duration;heroPrice.classList.add('is-changing');heroPrice.setAttribute('aria-label',`Recording session price ${option.price} for ${option.duration}. Activate to compare the next option.`)});
+}
 updateScrollUI();
+
+const beatList = document.querySelector('[data-beat-list]');
+if (beatList) {
+  const tracks = [
+    ["blacktop", "Blacktop"],
+    ["cold-intentions", "Cold Intentions"],
+    ["dead-of-night", "Dead of Night"],
+    ["keep-your-head-low", "Keep Your Head Low (Drill)"],
+    ["night-shift", "Night Shift"],
+    ["no-witness", "No Witness"],
+    ["silent-cuts", "Silent Cuts"],
+    ["soul-dust", "Soul Dust"],
+    ["trust-nobody", "Trust Nobody"]
+  ];
+  let lineup = tracks;
+  if (beatList.dataset.beatList === 'featured') {
+    const rotationKey = 'thinkin-sounds-featured-beats';
+    let previousSelection;
+    try {
+      previousSelection = sessionStorage.getItem(rotationKey);
+    } catch {
+      // Rotation also works when browser storage is unavailable.
+    }
+
+    for (let index = tracks.length - 1; index > 0; index--) {
+      const other = Math.floor(Math.random() * (index + 1));
+      [tracks[index], tracks[other]] = [tracks[other], tracks[index]];
+    }
+    lineup = tracks.slice(0, 3);
+    const selectionKey = () => lineup.map(([slug]) => slug).sort().join(',');
+    if (selectionKey() === previousSelection) lineup[2] = tracks[3];
+    try {
+      sessionStorage.setItem(rotationKey, selectionKey());
+    } catch {
+      // Remembering the previous lineup is optional.
+    }
+  }
+
+  beatList.innerHTML = lineup.map(([slug, title]) => `
+    <li class="beat-card">
+      <img src="assets/beats/${slug}.webp" alt="" width="400" height="400" loading="lazy" decoding="async">
+      <div class="beat-card-details">
+        <h3 class="beat-title">${title}</h3>
+        <p>ItzGazz</p>
+        <audio preload="none" src="assets/beats/${slug}.mp3"></audio>
+        <div class="beat-player">
+          <button class="beat-play" type="button" aria-label="Play ${title}"><span aria-hidden="true">▶</span></button>
+          <input class="beat-seek" type="range" min="0" max="30" step="0.1" value="0" aria-label="Seek in ${title}" disabled>
+          <span class="beat-time" aria-hidden="true">0:30</span>
+        </div>
+        <p class="beat-error" role="status" hidden></p>
+        <a class="beat-enquire" href="index.html?beat=${encodeURIComponent(title)}#contact" aria-label="Talk beats about ${title}">Talk beats <span aria-hidden="true">↗</span></a>
+      </div>
+    </li>`).join('');
+}
 
 let activeBeatPreview;
 document.querySelectorAll('.beat-card').forEach(card => {
@@ -73,7 +141,7 @@ document.querySelectorAll('.beat-card').forEach(card => {
   const icon = button.querySelector('span');
   const seek = card.querySelector('.beat-seek');
   const status = card.querySelector('.beat-error');
-  const title = card.querySelector('h4').textContent;
+  const title = card.querySelector('.beat-title').textContent;
   const updateButton = () => {
     icon.textContent = preview.paused ? '▶' : 'Ⅱ';
     button.setAttribute('aria-label', `${preview.paused ? 'Play' : 'Pause'} ${title}`);
