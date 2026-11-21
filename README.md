@@ -12,7 +12,7 @@ Serve the `dist` directory with any static HTTP server. The published build uses
 - Service and proposed pricing overview
 - Studio booking rules
 - Provisional engineer profiles and portraits
-- Beat shop coming-soon state
+- ItzGazz beat catalogue with cover art and 30-second previews
 - Validated enquiry form UI with service preselection
 - Direct phone and location details
 

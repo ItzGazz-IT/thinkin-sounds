@@ -48,3 +48,14 @@ const priceOptions=[{price:'R150',duration:'1 hour'},{price:'R250',duration:'2 h
 let priceIndex=0;
 heroPrice.addEventListener('click',()=>{priceIndex=(priceIndex+1)%priceOptions.length;const option=priceOptions[priceIndex];heroPrice.classList.remove('is-changing');void heroPrice.offsetWidth;heroPrice.querySelector('strong').textContent=option.price;heroPrice.querySelector('.price-duration').textContent=option.duration;heroPrice.classList.add('is-changing');heroPrice.setAttribute('aria-label',`Recording session price ${option.price} for ${option.duration}. Activate to compare the next option.`)});
 updateScrollUI();
+
+const beatPreviews = document.querySelectorAll('.beat-card audio');
+let activeBeatPreview;
+beatPreviews.forEach(preview => {
+  preview.addEventListener('play', () => {
+    if (activeBeatPreview && activeBeatPreview !== preview) {
+      activeBeatPreview.pause();
+    }
+    activeBeatPreview = preview;
+  });
+});
