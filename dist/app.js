@@ -82,31 +82,31 @@ updateScrollUI();
 const beatList = document.querySelector('[data-beat-list]');
 if (beatList) {
   const tracks = [
-    ["blacktop", "Blacktop"],
-    ["cold-intentions", "Cold Intentions"],
-    ["dead-of-night", "Dead of Night"],
-    ["keep-your-head-low", "Keep Your Head Low (Drill)"],
-    ["night-shift", "Night Shift"],
-    ["no-witness", "No Witness"],
-    ["silent-cuts", "Silent Cuts"],
-    ["soul-dust", "Soul Dust"],
-    ["trust-nobody", "Trust Nobody"],
-    ["niche", "Niche"],
-    ["sippin-on-the-beach", "Sippin on the Beach"],
-    ["for-you", "For You"],
-    ["tippy", "Tippy"],
-    ["stay-with-me", "Stay With Me"],
-    ["racecar", "RaceCar"],
-    ["back-it-up", "Back It Up"],
-    ["dues", "Dues"],
-    ["hills", "Hills"],
-    ["mainz", "MaInZ"],
-    ["night-time", "Night Time"],
-    ["on-a-cloud", "ON a ClOUD"],
-    ["scarlet-reign", "SCARLET REIGN"],
-    ["tight", "Tight"],
-    ["tough-times", "Tough Times"],
-    ["udeee", "UDEEE"]
+    ["blacktop", "Blacktop", 141, "F♯ minor"],
+    ["cold-intentions", "Cold Intentions", 82, "B♭ minor"],
+    ["dead-of-night", "Dead of Night", 70, "A♭ major"],
+    ["keep-your-head-low", "Keep Your Head Low (Drill)", 68, "F♯ minor"],
+    ["night-shift", "Night Shift", 92, "E♭ minor"],
+    ["no-witness", "No Witness", 70, "F major / F minor"],
+    ["silent-cuts", "Silent Cuts", 68, "C minor"],
+    ["soul-dust", "Soul Dust", 75, "F major"],
+    ["trust-nobody", "Trust Nobody", 70, "F minor / F major"],
+    ["niche", "Niche", 70, "F minor"],
+    ["sippin-on-the-beach", "Sippin on the Beach", 113, "C minor"],
+    ["for-you", "For You", 98, "C♯ minor"],
+    ["tippy", "Tippy", 70, "E♭ minor"],
+    ["stay-with-me", "Stay With Me", 75, "F minor"],
+    ["racecar", "RaceCar", 79, "E♭ minor"],
+    ["back-it-up", "Back It Up", 68, "F minor"],
+    ["dues", "Dues", 75, "B minor / B major"],
+    ["hills", "Hills", 120, "F♯ minor / A major"],
+    ["mainz", "MaInZ", 91, "B minor / B major"],
+    ["night-time", "Night Time", 68, "G minor / G major"],
+    ["on-a-cloud", "ON a ClOUD", 120, "F♯ major / E♭ minor"],
+    ["scarlet-reign", "SCARLET REIGN", 112, "B♭ minor"],
+    ["tight", "Tight", 78, "D minor"],
+    ["tough-times", "Tough Times", 69, "G major / B minor"],
+    ["udeee", "UDEEE", 70, "F major / F minor"]
   ];
   let lineup = tracks;
   if (beatList.dataset.beatList === 'featured') {
@@ -132,12 +132,12 @@ if (beatList) {
     }
   }
 
-  beatList.innerHTML = lineup.map(([slug, title]) => `
+  beatList.innerHTML = lineup.map(([slug, title, bpm, key]) => `
     <li class="beat-card">
       <img src="assets/beats/${slug}.webp" alt="" width="400" height="400" loading="lazy" decoding="async">
       <div class="beat-card-details">
         <h3 class="beat-title">${title}</h3>
-        <p>ItzGazz</p>
+        <p>ItzGazz · ≈ ${bpm} BPM · ${key}</p>
         <audio preload="none" src="assets/beats/${slug}.mp3"></audio>
         <div class="beat-player">
           <button class="beat-play" type="button" aria-label="Play ${title}"><span aria-hidden="true">▶</span></button>
