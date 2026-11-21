@@ -90,7 +90,23 @@ if (beatList) {
     ["no-witness", "No Witness"],
     ["silent-cuts", "Silent Cuts"],
     ["soul-dust", "Soul Dust"],
-    ["trust-nobody", "Trust Nobody"]
+    ["trust-nobody", "Trust Nobody"],
+    ["niche", "Niche"],
+    ["sippin-on-the-beach", "Sippin on the Beach"],
+    ["for-you", "For You"],
+    ["tippy", "Tippy"],
+    ["stay-with-me", "Stay With Me"],
+    ["racecar", "RaceCar"],
+    ["back-it-up", "Back It Up"],
+    ["dues", "Dues"],
+    ["hills", "Hills"],
+    ["mainz", "MaInZ"],
+    ["night-time", "Night Time"],
+    ["on-a-cloud", "ON a ClOUD"],
+    ["scarlet-reign", "SCARLET REIGN"],
+    ["tight", "Tight"],
+    ["tough-times", "Tough Times"],
+    ["udeee", "UDEEE"]
   ];
   let lineup = tracks;
   if (beatList.dataset.beatList === 'featured') {
