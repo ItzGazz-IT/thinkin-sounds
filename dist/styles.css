@@ -47,9 +47,55 @@
   color: #cdcad7;
   font-size: .85rem;
 }
-.beat-card audio {
-  display: block;
-  width: 100%;
-  height: 42px;
-  color-scheme: dark;
+.beat-player {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.beat-play {
+  display: grid;
+  place-items: center;
+  flex: 0 0 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--yellow);
+  color: #141318;
+  font: 700 1rem var(--body);
+  cursor: pointer;
+}
+.beat-play:hover {
+  background: #fff;
+}
+.beat-seek {
+  flex: 1;
+  min-width: 0;
+  accent-color: var(--yellow);
+}
+.beat-time {
+  color: #cdcad7;
+  font-size: .75rem;
+  font-variant-numeric: tabular-nums;
+}
+.beat-enquire {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 44px;
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid #ffffff26;
+  color: var(--yellow);
+  font-weight: 700;
+  text-decoration: none;
+}
+.beat-enquire:hover {
+  text-decoration: underline;
+}
+.beat-error {
+  margin: 8px 0 0;
+}
+.beat-selection[hidden] {
+  display: none;
 }

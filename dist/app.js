@@ -2,7 +2,23 @@ const toggle=document.querySelector('.nav-toggle');
 const nav=document.querySelector('#site-nav');
 toggle.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')==='true';toggle.setAttribute('aria-expanded',String(!open));nav.classList.toggle('open',!open)});
 nav.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{nav.classList.remove('open');toggle.setAttribute('aria-expanded','false')}));
-document.querySelectorAll('[data-service]').forEach(link=>link.addEventListener('click',()=>{const service=document.querySelector('#service');service.value=link.dataset.service;setTimeout(()=>service.focus(),250)}));
+const serviceField = document.querySelector('#service');
+const beatField = document.querySelector('#enquiry-beat');
+const setEnquiryBeat = title => {
+  beatField.value = title;
+  beatField.disabled = !title;
+  beatField.parentElement.hidden = !title;
+};
+document.querySelectorAll('[data-service]').forEach(link => {
+  link.addEventListener('click', () => {
+    serviceField.value = link.dataset.service;
+    setEnquiryBeat(link.dataset.beat || '');
+    setTimeout(() => serviceField.focus(), 250);
+  });
+});
+serviceField.addEventListener('change', () => {
+  if (serviceField.value !== 'Beat enquiry') setEnquiryBeat('');
+});
 document.querySelector('#year').textContent=new Date().getFullYear();
 document.querySelector('#enquiry-form').addEventListener('submit',event=>{
   event.preventDefault();
@@ -15,6 +31,7 @@ document.querySelector('#enquiry-form').addEventListener('submit',event=>{
     `Name / artist: ${value('name')}`,
     `Contact: ${value('contact')}`,
     `Service: ${value('service')}`,
+    ...(value('beat') ? [`Beat: ${value('beat')} by ItzGazz`] : []),
     `Track count: ${value('tracks')||'Not specified'}`,
     `Preferred date: ${value('preferred_date')||'Flexible'}`,
     `Target release: ${value('release_date')||'Not specified'}`,
@@ -49,13 +66,48 @@ let priceIndex=0;
 heroPrice.addEventListener('click',()=>{priceIndex=(priceIndex+1)%priceOptions.length;const option=priceOptions[priceIndex];heroPrice.classList.remove('is-changing');void heroPrice.offsetWidth;heroPrice.querySelector('strong').textContent=option.price;heroPrice.querySelector('.price-duration').textContent=option.duration;heroPrice.classList.add('is-changing');heroPrice.setAttribute('aria-label',`Recording session price ${option.price} for ${option.duration}. Activate to compare the next option.`)});
 updateScrollUI();
 
-const beatPreviews = document.querySelectorAll('.beat-card audio');
 let activeBeatPreview;
-beatPreviews.forEach(preview => {
-  preview.addEventListener('play', () => {
-    if (activeBeatPreview && activeBeatPreview !== preview) {
-      activeBeatPreview.pause();
+document.querySelectorAll('.beat-card').forEach(card => {
+  const preview = card.querySelector('audio');
+  const button = card.querySelector('.beat-play');
+  const icon = button.querySelector('span');
+  const seek = card.querySelector('.beat-seek');
+  const status = card.querySelector('.beat-error');
+  const title = card.querySelector('h4').textContent;
+  const updateButton = () => {
+    icon.textContent = preview.paused ? '▶' : 'Ⅱ';
+    button.setAttribute('aria-label', `${preview.paused ? 'Play' : 'Pause'} ${title}`);
+  };
+  const showError = () => {
+    status.textContent = 'Preview unavailable. Try again in a moment.';
+    status.hidden = false;
+    updateButton();
+  };
+
+  button.addEventListener('click', () => {
+    if (!preview.paused) {
+      preview.pause();
+      return;
     }
+
+    status.hidden = true;
+    if (activeBeatPreview && activeBeatPreview !== preview) activeBeatPreview.pause();
     activeBeatPreview = preview;
+    preview.play().catch(error => {
+      if (error.name !== 'AbortError') showError();
+    });
+  });
+  preview.addEventListener('play', updateButton);
+  preview.addEventListener('pause', updateButton);
+  preview.addEventListener('ended', updateButton);
+  preview.addEventListener('loadedmetadata', () => {
+    seek.max = preview.duration;
+    seek.disabled = false;
+  });
+  preview.addEventListener('timeupdate', () => {
+    seek.value = preview.currentTime;
+  });
+  seek.addEventListener('input', () => {
+    preview.currentTime = seek.valueAsNumber;
   });
 });
