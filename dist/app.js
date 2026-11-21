@@ -140,12 +140,12 @@ if (beatList) {
         <p>ItzGazz · ≈ ${bpm} BPM · ${key}</p>
         <audio preload="none" src="assets/beats/${slug}.mp3"></audio>
         <div class="beat-player">
-          <button class="beat-play" type="button" aria-label="Play ${title}"><span aria-hidden="true">▶</span></button>
+          <button class="beat-play" type="button" aria-label="Play ${title}">Play</button>
           <input class="beat-seek" type="range" min="0" max="90" step="0.1" value="0" aria-label="Seek in ${title}" disabled>
           <span class="beat-time" aria-hidden="true">1:30</span>
         </div>
         <p class="beat-error" role="status" hidden></p>
-        <a class="beat-enquire" href="index.html?beat=${encodeURIComponent(title)}#contact" aria-label="Talk beats about ${title}">Talk beats <span aria-hidden="true">↗</span></a>
+        <a class="beat-enquire" href="index.html?beat=${encodeURIComponent(title)}#contact" aria-label="Talk beats about ${title}">Talk beats</a>
       </div>
     </li>`).join('');
 }
@@ -154,13 +154,13 @@ let activeBeatPreview;
 document.querySelectorAll('.beat-card').forEach(card => {
   const preview = card.querySelector('audio');
   const button = card.querySelector('.beat-play');
-  const icon = button.querySelector('span');
   const seek = card.querySelector('.beat-seek');
   const status = card.querySelector('.beat-error');
   const title = card.querySelector('.beat-title').textContent;
   const updateButton = () => {
-    icon.textContent = preview.paused ? '▶' : 'Ⅱ';
-    button.setAttribute('aria-label', `${preview.paused ? 'Play' : 'Pause'} ${title}`);
+    const action = preview.paused ? 'Play' : 'Pause';
+    button.textContent = action;
+    button.setAttribute('aria-label', `${action} ${title}`);
   };
   const showError = () => {
     status.textContent = 'Preview unavailable. Try again in a moment.';
