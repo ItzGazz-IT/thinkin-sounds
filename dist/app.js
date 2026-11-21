@@ -141,8 +141,8 @@ if (beatList) {
         <audio preload="none" src="assets/beats/${slug}.mp3"></audio>
         <div class="beat-player">
           <button class="beat-play" type="button" aria-label="Play ${title}"><span aria-hidden="true">▶</span></button>
-          <input class="beat-seek" type="range" min="0" max="30" step="0.1" value="0" aria-label="Seek in ${title}" disabled>
-          <span class="beat-time" aria-hidden="true">0:30</span>
+          <input class="beat-seek" type="range" min="0" max="90" step="0.1" value="0" aria-label="Seek in ${title}" disabled>
+          <span class="beat-time" aria-hidden="true">1:30</span>
         </div>
         <p class="beat-error" role="status" hidden></p>
         <a class="beat-enquire" href="index.html?beat=${encodeURIComponent(title)}#contact" aria-label="Talk beats about ${title}">Talk beats <span aria-hidden="true">↗</span></a>
