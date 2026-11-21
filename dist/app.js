@@ -52,8 +52,8 @@ if (enquiryForm) {
     const recipient=value('recipient')||'27826535019';
     const status=form.querySelector('.form-status');
     status.hidden=false;
-    status.textContent='WhatsApp opened with your enquiry. Review the message there before sending.';
-    window.open(`https://wa.me/${recipient}?text=${encodeURIComponent(lines.join('\n'))}`,'_blank','noopener');
+    status.textContent='Opening WhatsApp with your enquiry. You can review the message before sending.';
+    window.location.assign(`https://wa.me/${recipient}?text=${encodeURIComponent(lines.join('\n'))}`);
   });
 }
 const musicScrollNote=document.querySelector('.music-scroll-note');
