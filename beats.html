@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09090b">
+  <meta name="description" content="Preview the ItzGazz beat catalogue at Thinkin’ Sounds.">
+  <title>Beat Shop | Thinkin’ Sounds</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="logo-fix.css">
+  <script src="app.js" defer></script>
+</head>
+<body class="inner-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="music-scroll" role="scrollbar" aria-label="Page position" aria-controls="main" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0"><div class="music-scroll-note" aria-hidden="true">♫</div></div>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Thinkin’ Sounds home"><img src="assets/logos/logo-color-transparent.webp" alt="Thinkin’ Sounds" width="500" height="500" decoding="async"></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span></span><span class="sr-only">Menu</span></button>
+    <nav id="site-nav" aria-label="Main navigation">
+      <a href="index.html#services">Services</a><a href="index.html#studio">Studio</a><a href="index.html#engineers">Engineers</a><a href="beats.html" aria-current="page">Beats</a><a class="button button-small" href="index.html#contact">Book a session</a>
+    </nav>
+  </header>
+  <main class="beat-shop" id="main">
+    <section class="beat-catalogue" aria-labelledby="beat-catalogue-title">
+      <p class="eyebrow">Beat shop</p>
+      <h1 id="beat-catalogue-title">Beats by ItzGazz</h1>
+      <p>Listen to 90-second previews and enquire about any beat. Key and BPM are estimates.</p>
+      <ul class="beat-grid" data-beat-list="all" role="list"></ul>
+      <noscript><p>Enable JavaScript to load the beat previews.</p></noscript>
+    </section>
+    <section class="beat-shop-licences" aria-labelledby="beat-licence-title">
+      <div>
+        <h2 id="beat-licence-title">Beat licences</h2>
+        <p>Have a sound in mind?</p>
+        <a class="button button-light" href="index.html?service=custom-beat#contact">Ask for a custom beat</a>
+      </div>
+      <div class="beat-licences" aria-label="Planned beat licence options">
+        <article><span>MP3 lease</span><strong>R249</strong><p>Tagged MP3 file. Non-exclusive licence.</p></article>
+        <article><span>WAV lease</span><strong>R349</strong><p>High-quality WAV file. Non-exclusive licence.</p></article>
+        <article><span>Trackout lease</span><strong>R999</strong><p>WAV stems for greater mix control.</p></article>
+        <article><span>Exclusive</span><strong>Quote</strong><p>Discuss availability and usage directly.</p></article>
+        <p class="catalogue-note">Online purchases are not open yet. Final files, usage limits and licence wording will be shown before payment.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer><img src="assets/logos/logo-color-transparent.webp" alt="Thinkin’ Sounds" width="500" height="500" loading="lazy" decoding="async"><p>Record it. Shape it. Release it.</p><div><a href="index.html#services">Services</a><a href="index.html#engineers">Engineers</a><a href="index.html#faq">FAQ</a><a href="index.html#contact">Contact</a></div><div class="legal-links"><a href="privacy.html">Privacy</a><a href="booking-terms.html">Booking terms</a><a href="beat-licensing.html">Beat licensing</a><a href="terms.html">Website terms</a></div><small>© <span id="year"></span> Thinkin’ Sounds. Prices and terms subject to studio confirmation.</small></footer>
+  <button class="back-to-top" type="button" aria-label="Back to top"><span aria-hidden="true">♫</span> Top</button>
+</body>
+</html>
