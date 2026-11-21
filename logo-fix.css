@@ -24,13 +24,6 @@ footer > img {
   text-underline-offset: 5px;
 }
 
-.whatsapp-link svg {
-  width: 23px;
-  height: 23px;
-  flex: 0 0 23px;
-  fill: #25d366;
-}
-
 .whatsapp-link:hover,
 .whatsapp-link:focus-visible {
   color: #25d366;
