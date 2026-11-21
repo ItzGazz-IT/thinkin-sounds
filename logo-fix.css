@@ -517,3 +517,118 @@ footer .legal-links { flex-wrap: wrap; font-size: 0.8rem; color: #aaa9b1; }
   .consent { grid-column: 1; }
   .back-to-top { right: 14px; padding: 9px 12px; }
 }
+
+@media (max-width: 900px) {
+  .nav-toggle {
+    justify-content: center;
+    align-items: center;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .site-header nav {
+    max-height: calc(100vh - 86px);
+    max-height: calc(100dvh - 86px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .site-header nav > a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    min-height: 0;
+  }
+
+  .hero-content {
+    padding: 126px 22px 192px;
+  }
+
+  .hero h1,
+  .artist-showcase h2,
+  .contact h2 {
+    font-size: clamp(2.45rem, 10vw, 3.45rem);
+  }
+
+  .artist-reel {
+    margin-right: -22px;
+    padding-right: 22px;
+  }
+
+  .artist-frame,
+  .artist-frame-tall,
+  .artist-frame-wide {
+    height: clamp(280px, 105vw, 460px);
+  }
+
+  .service-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .service-card {
+    overflow-wrap: anywhere;
+  }
+
+  .beat-shop,
+  .contact > * {
+    min-width: 0;
+  }
+
+  .contact form {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    padding: clamp(16px, 5vw, 28px);
+  }
+
+  .contact .field,
+  .contact .field input,
+  .contact .field select,
+  .contact .field textarea {
+    min-width: 0;
+  }
+
+  .contact input[type="date"] {
+    min-height: 44px;
+  }
+
+  .consent {
+    min-height: 44px;
+    align-items: flex-start;
+  }
+
+  .consent input {
+    flex: 0 0 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .beat-seek {
+    min-height: 44px;
+  }
+
+  footer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  footer > div {
+    flex-wrap: wrap;
+    gap: 10px 18px;
+  }
+
+  footer > div a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .back-to-top {
+    min-height: 44px;
+    right: max(14px, env(safe-area-inset-right));
+    bottom: max(16px, env(safe-area-inset-bottom));
+  }
+}
