@@ -9,8 +9,9 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="logo-fix.css?v=booking-admin">
-  <link rel="stylesheet" href="account.css?v=booking-cancellation">
-  <script type="module" src="admin.js?v=booking-cancellation"></script>
+  <link rel="stylesheet" href="account.css?v=booking-calendar">
+  <link rel="stylesheet" href="admin-calendar.css">
+  <script type="module" src="admin.js?v=booking-calendar"></script>
 </head>
 <body class="inner-page">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -23,6 +24,32 @@
     <h1>Booking admin</h1>
     <p id="admin-status" role="status" aria-live="polite">Checking staff access…</p>
     <p id="admin-login" hidden><a class="button" href="account.html">Sign in to your studio account</a></p>
+    <section id="studio-calendar" hidden aria-labelledby="calendar-heading">
+      <div class="account-session">
+        <h2 id="calendar-heading">Studio calendar</h2>
+        <p>Johannesburg time (SAST)</p>
+      </div>
+      <div class="studio-calendar-nav">
+        <button type="button" class="button button-light" id="calendar-previous">Previous</button>
+        <h3 id="calendar-month" aria-live="polite"></h3>
+        <button type="button" class="button button-light" id="calendar-next">Next</button>
+      </div>
+      <div id="calendar-grid" class="studio-calendar-grid" aria-labelledby="calendar-month"></div>
+      <p class="studio-calendar-legend"><span><i class="studio-confirmed" aria-hidden="true"></i> Confirmed</span><span><i class="studio-blocked" aria-hidden="true"></i> Blocked</span></p>
+      <p id="calendar-status" role="status"></p>
+      <h3 id="calendar-day"></h3>
+      <ul id="calendar-events" class="account-bookings"></ul>
+      <form id="block-form">
+        <h3 class="field">Block studio time</h3>
+        <div class="field small"><label for="block-date">Start date</label><input type="date" id="block-date" required></div>
+        <div class="field small"><label for="block-end-date">End date</label><input type="date" id="block-end-date" required></div>
+        <label class="field studio-all-day"><input type="checkbox" id="block-all-day" checked> All day, including the end date</label>
+        <div class="field small" id="block-start-field" hidden><label for="block-start-time">Start time</label><input type="time" id="block-start-time" value="08:00" disabled required></div>
+        <div class="field small" id="block-end-field" hidden><label for="block-end-time">End time</label><input type="time" id="block-end-time" value="20:00" disabled required></div>
+        <div class="field"><label for="block-label">Note (optional, admin only)</label><input id="block-label" maxlength="120"></div>
+        <div class="account-actions"><button id="submit-block" class="button" type="submit">Block time</button></div>
+      </form>
+    </section>
     <section id="admin-bookings" hidden aria-labelledby="requests-heading">
       <div class="account-session">
         <h2 id="requests-heading">Booking requests</h2>

@@ -1,4 +1,5 @@
 import { projectUrl, publishableKey } from './account-config.js';
+import { createStudioCalendar } from './admin-calendar.js';
 
 const get = id => document.getElementById(id);
 const status = get('admin-status');
@@ -26,6 +27,7 @@ const formatter = new Intl.DateTimeFormat('en-ZA', {
 });
 const limit = 50;
 let client;
+let calendar;
 let offset = 0;
 let loadId = 0;
 let busy = false;
@@ -210,6 +212,7 @@ async function loadBookings(message = '') {
   if (error) {
     if (error.code === '42501') {
       section.hidden = true;
+      calendar.hide();
       list.replaceChildren();
       status.textContent = 'This studio account does not have staff access.';
     } else {
@@ -218,6 +221,7 @@ async function loadBookings(message = '') {
     return;
   }
   section.hidden = false;
+  void calendar.load();
   const visible = data.slice(0, limit);
   list.replaceChildren(...visible.map(renderBooking));
   if (!visible.length) {
@@ -237,10 +241,12 @@ refresh.addEventListener('click', () => { void loadBookings(); });
 try {
   const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2/+esm');
   client = createClient(projectUrl, publishableKey);
+  calendar = createStudioCalendar(client);
   client.auth.onAuthStateChange((event, session) => {
     if (!session) {
       loadId++;
       section.hidden = true;
+      calendar.hide();
       list.replaceChildren();
       get('admin-login').hidden = false;
       status.textContent = 'Sign in with your studio staff account.';
