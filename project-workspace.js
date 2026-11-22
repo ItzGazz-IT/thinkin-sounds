@@ -101,6 +101,92 @@ export function createProjectWorkspace(client, staff = false) {
     body.append(form);
   }
 
+  function renderFeedback(data, booking, songLabel, revisions) {
+    body.append(heading('Mix feedback'));
+    if (data.mix_approved_at) {
+      const approved = document.createElement('p');
+      approved.className = 'mix-approval';
+      approved.textContent = `Mix approved · ${dates.format(new Date(data.mix_approved_at))}`;
+      body.append(approved);
+    }
+    for (const entry of data.feedback || []) {
+      const details = document.createElement('details');
+      details.className = 'workspace-feedback-entry';
+      const summary = document.createElement('summary');
+      summary.textContent = `${entry.action === 'approval' ? 'Mix approved' : 'Revision notes submitted'} · ${dates.format(new Date(entry.created_at))}`;
+      details.append(summary);
+      for (const note of entry.notes) {
+        const title = document.createElement('strong');
+        title.textContent = `${songLabel(note.song - 1)} · Round ${note.round}`;
+        const content = document.createElement('p');
+        content.textContent = note.note;
+        details.append(title, content);
+      }
+      if (entry.action === 'approval') {
+        const approval = document.createElement('p');
+        approval.textContent = 'The client approved the mix shared with them at the time.';
+        details.append(approval);
+      }
+      body.append(details);
+    }
+    if (staff || !data.first_mix_at || data.masters_ready_at || data.mix_approved_at) return;
+
+    const form = document.createElement('form');
+    const fields = [];
+    let attempt;
+    function send(control, action, notes) {
+      const signature = JSON.stringify([action, notes]);
+      if (attempt?.signature !== signature) attempt = { signature, id: crypto.randomUUID() };
+      return submit(control, () => client.rpc('submit_studio_mix_feedback', {
+        booking_id: booking.id, feedback_action: action, song_notes: notes, request_id: attempt.id
+      }), () => load(booking, action === 'approval' ? 'Mix approved. The studio has been notified.' : 'Revision notes sent to the studio.'));
+    }
+
+    const submittedRounds = new Set((data.feedback || []).flatMap(entry => entry.notes.map(note => `${note.song}:${note.round}`)));
+    revisions.forEach((used, index) => {
+      if (used >= 2) return;
+      if (submittedRounds.has(`${index + 1}:${used + 1}`)) {
+        const pending = document.createElement('p');
+        pending.className = 'field';
+        pending.textContent = `${songLabel(index)} · Notes sent for round ${used + 1}`;
+        form.append(pending);
+        return;
+      }
+      const notes = document.createElement('details');
+      notes.className = 'field workspace-song-note';
+      const summary = document.createElement('summary');
+      summary.textContent = `${songLabel(index)} · ${2 - used} rounds remaining`;
+      notes.append(summary);
+      const input = field(notes, 'Revision note', { tag: 'textarea', attributes: {
+        maxLength: 1000, rows: 3, placeholder: 'Describe the change and include a time in the track if helpful.'
+      } });
+      fields.push({ song: index + 1, input });
+      form.append(notes);
+    });
+    const actions = document.createElement('div');
+    actions.className = 'account-actions';
+    if (fields.length) {
+      const sendNotes = button('Send revision notes');
+      sendNotes.type = 'submit';
+      actions.append(sendNotes);
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        const notes = fields.map(({ song, input }) => ({ song, note: input.value.trim() })).filter(entry => entry.note);
+        if (!notes.length) { status.textContent = 'Add a note to at least one song.'; return; }
+        void send(sendNotes, 'revisions', notes);
+      });
+    }
+    const approve = button('Approve mix', 'button button-light');
+    approve.addEventListener('click', () => {
+      if (!saving && window.confirm('Approve the current mix and notify the studio?')) {
+        void send(approve, 'approval', []);
+      }
+    });
+    actions.append(approve);
+    form.append(actions);
+    body.append(form);
+  }
+
   function renderTimeline(data, booking) {
     if (!data.bundle_code) return;
     body.append(heading('Project timeline'));
@@ -116,6 +202,7 @@ export function createProjectWorkspace(client, staff = false) {
     const songs = (data.tracklist || '').split('\n').map(line => line.trim()).filter(Boolean);
     const revisions = Array.from({ length: data.song_count }, (_, index) => data.revisions_used?.[index] || 0);
     const songLabel = index => songs[index] || `Song ${index + 1}`;
+    renderFeedback(data, booking, songLabel, revisions);
     body.append(heading('Revision rounds'));
     if (!staff) {
       const list = document.createElement('ul');

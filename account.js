@@ -1,7 +1,7 @@
 import { projectUrl, publishableKey } from './account-config.js';
 import { studioBundles, bundleSessionLabel } from './booking-bundles.js';
 import { createOpenDaysPicker } from './open-days.js';
-import { createProjectWorkspace } from './project-workspace.js?v=project-delivery';
+import { createProjectWorkspace } from './project-workspace.js?v=project-feedback';
 
 const get = id => document.getElementById(id);
 const status = get('account-status');
@@ -204,7 +204,12 @@ function showSession(event, nextSession) {
     syncBundle();
     const userId = session.user.id;
     void client.rpc('is_studio_admin').then(({ data }) => {
-      if (session?.user.id === userId) get('staff-bookings').hidden = data !== true;
+      if (session?.user.id !== userId || recovering) return;
+      get('staff-bookings').hidden = data !== true;
+      const staffProject = new URLSearchParams(location.search).get('staff_project');
+      if (data === true && staffProject && /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i.test(staffProject)) {
+        location.assign('admin.html?project=' + encodeURIComponent(staffProject));
+      }
     });
     void loadAvailability();
     void loadAvailability(true);
