@@ -10,6 +10,17 @@ const refresh = get('refresh-bookings');
 const declineDialog = get('decline-dialog');
 const declineReason = get('decline-reason');
 let pendingDecline;
+const rescheduleDialog = get('reschedule-dialog');
+const rescheduleDate = get('reschedule-date');
+const rescheduleSlot = get('reschedule-slot');
+const rescheduleStatus = get('reschedule-status');
+const rescheduleSubmit = get('submit-reschedule');
+const studioTimeZone = 'Africa/Johannesburg';
+const studioTime = new Intl.DateTimeFormat('en-ZA', {
+  timeZone: studioTimeZone, hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+});
+let bookingToMove;
+let rescheduleLoadId = 0;
 const formatter = new Intl.DateTimeFormat('en-ZA', {
   timeZone: 'Africa/Johannesburg', dateStyle: 'full', timeStyle: 'short'
 });
@@ -58,6 +69,19 @@ function renderBooking(booking) {
       declineDialog.showModal();
     }));
     item.append(actions);
+  } else if (booking.status === 'confirmed' && new Date(booking.starts_at) > new Date()) {
+    item.append(action('Reschedule', () => {
+      if (busy) return;
+      bookingToMove = booking;
+      get('reschedule-current').textContent = `Current session: ${formatter.format(new Date(booking.starts_at))} SAST · ${booking.hours}h`;
+      const parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: studioTimeZone, year: 'numeric', month: '2-digit', day: '2-digit'
+      }).formatToParts(new Date(booking.starts_at));
+      const date = Object.fromEntries(parts.map(({ type, value }) => [type, value]));
+      rescheduleDate.value = `${date.year}-${date.month}-${date.day}`;
+      rescheduleDialog.showModal();
+      void loadRescheduleSlots();
+    }));
   }
   return item;
 }
@@ -101,6 +125,65 @@ get('decline-form').addEventListener('submit', event => {
     return;
   }
   void decideBooking(pendingDecline, 'declined', reason);
+});
+
+async function loadRescheduleSlots() {
+  const id = ++rescheduleLoadId;
+  rescheduleSlot.replaceChildren(new Option('Choose an available time', ''));
+  rescheduleSlot.disabled = rescheduleSubmit.disabled = true;
+  rescheduleStatus.textContent = '';
+  if (!rescheduleDate.value) return;
+  rescheduleStatus.textContent = 'Checking available times…';
+  try {
+    const { data, error } = await client.rpc('admin_reschedule_availability', {
+      booking_id: bookingToMove.id, booking_date: rescheduleDate.value
+    });
+    if (id !== rescheduleLoadId || !rescheduleDialog.open) return;
+    if (error) throw error;
+    for (const slot of data) {
+      const option = new Option(`${studioTime.format(new Date(slot.starts_at))} · ${slot.room_name}`, slot.starts_at);
+      option.dataset.roomId = slot.room_id;
+      rescheduleSlot.append(option);
+    }
+    rescheduleSlot.disabled = !data.length;
+    rescheduleStatus.textContent = data.length ? '' : 'No alternative times on this date. Choose another day.';
+  } catch {
+    if (id === rescheduleLoadId) rescheduleStatus.textContent = 'Could not load times. Change the date to try again.';
+  }
+}
+
+rescheduleDate.addEventListener('change', loadRescheduleSlots);
+rescheduleSlot.addEventListener('change', () => { rescheduleSubmit.disabled = !rescheduleSlot.value; });
+get('cancel-reschedule').addEventListener('click', () => rescheduleDialog.close());
+rescheduleDialog.addEventListener('cancel', event => { if (busy) event.preventDefault(); });
+get('reschedule-form').addEventListener('submit', async event => {
+  event.preventDefault();
+  if (busy || !rescheduleSlot.value) return;
+  busy = true;
+  const request = {
+    booking_id: bookingToMove.id,
+    requested_room: Number(rescheduleSlot.selectedOptions[0].dataset.roomId),
+    requested_start: rescheduleSlot.value
+  };
+  const cancel = get('cancel-reschedule');
+  rescheduleSubmit.disabled = rescheduleDate.disabled = rescheduleSlot.disabled = cancel.disabled = true;
+  try {
+    const { error } = await client.rpc('admin_reschedule_studio_booking', request);
+    if (error) {
+      await loadRescheduleSlots();
+      rescheduleStatus.textContent = error.message;
+    } else {
+      rescheduleDialog.close();
+      await loadBookings('Booking rescheduled. Customer email queued.');
+    }
+  } catch {
+    rescheduleStatus.textContent = 'Could not reschedule the booking. Refresh the list to check its status.';
+  } finally {
+    busy = false;
+    rescheduleDate.disabled = cancel.disabled = false;
+    rescheduleSlot.disabled = rescheduleSlot.options.length < 2;
+    rescheduleSubmit.disabled = !rescheduleSlot.value;
+  }
 });
 
 async function loadBookings(message = '') {

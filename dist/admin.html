@@ -9,8 +9,8 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="logo-fix.css?v=booking-admin">
-  <link rel="stylesheet" href="account.css?v=booking-declines">
-  <script type="module" src="admin.js?v=booking-declines"></script>
+  <link rel="stylesheet" href="account.css?v=booking-reschedule">
+  <script type="module" src="admin.js?v=booking-reschedule"></script>
 </head>
 <body class="inner-page">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -46,6 +46,25 @@
       <div class="account-actions">
         <button id="submit-decline" class="button" type="submit">Decline and email customer</button>
         <button id="cancel-decline" class="account-text-button" type="button">Cancel</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog class="decline-dialog" id="reschedule-dialog" aria-labelledby="reschedule-heading">
+    <form id="reschedule-form">
+      <h2 id="reschedule-heading">Reschedule booking</h2>
+      <p class="field" id="reschedule-current"></p>
+      <div class="field">
+        <label for="reschedule-date">New date (SAST)</label>
+        <input id="reschedule-date" type="date" required autofocus>
+      </div>
+      <div class="field">
+        <label for="reschedule-slot">New time (SAST)</label>
+        <select id="reschedule-slot" required disabled></select>
+      </div>
+      <p class="field" id="reschedule-status" role="status"></p>
+      <div class="account-actions">
+        <button id="submit-reschedule" class="button" type="submit" disabled>Reschedule and email customer</button>
+        <button id="cancel-reschedule" class="account-text-button" type="button">Cancel</button>
       </div>
     </form>
   </dialog>

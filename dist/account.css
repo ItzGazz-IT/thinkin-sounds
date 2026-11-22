@@ -148,3 +148,11 @@
 .decline-dialog textarea {
   resize: vertical;
 }
+
+.decline-dialog .field[role="status"]:empty {
+  display: none;
+}
+
+.decline-dialog p.field {
+  margin: 0;
+}
