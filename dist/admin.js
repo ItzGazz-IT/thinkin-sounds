@@ -1,6 +1,7 @@
 import { projectUrl, publishableKey } from './account-config.js';
 import { createStudioCalendar } from './admin-calendar.js';
 import { bundleSessionLabel } from './booking-bundles.js';
+import { createProjectWorkspace } from './project-workspace.js';
 
 const get = id => document.getElementById(id);
 const status = get('admin-status');
@@ -29,6 +30,7 @@ const formatter = new Intl.DateTimeFormat('en-ZA', {
 const limit = 50;
 let client;
 let calendar;
+let workspace;
 let offset = 0;
 let loadId = 0;
 let busy = false;
@@ -91,6 +93,9 @@ function renderBooking(booking) {
     }), action('Cancel booking', () => {
       if (!busy) showReasonDialog(booking.id, 'cancelled');
     }));
+  }
+  if (bundle || ['requested', 'confirmed'].includes(booking.status)) {
+    item.append(action(bundle ? 'Project workspace' : 'View session prep', () => workspace.open(booking)));
   }
   return item;
 }
@@ -221,6 +226,7 @@ async function loadBookings(message = '') {
     if (error.code === '42501') {
       section.hidden = true;
       calendar.hide();
+      workspace.close();
       list.replaceChildren();
       status.textContent = 'This studio account does not have staff access.';
     } else {
@@ -250,11 +256,13 @@ try {
   const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2/+esm');
   client = createClient(projectUrl, publishableKey);
   calendar = createStudioCalendar(client);
+  workspace = createProjectWorkspace(client, true);
   client.auth.onAuthStateChange((event, session) => {
     if (!session) {
       loadId++;
       section.hidden = true;
       calendar.hide();
+      workspace.close();
       list.replaceChildren();
       get('admin-login').hidden = false;
       status.textContent = 'Sign in with your studio staff account.';

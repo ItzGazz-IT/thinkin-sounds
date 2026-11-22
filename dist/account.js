@@ -1,5 +1,7 @@
 import { projectUrl, publishableKey } from './account-config.js';
 import { studioBundles, bundleSessionLabel } from './booking-bundles.js';
+import { createOpenDaysPicker } from './open-days.js';
+import { createProjectWorkspace } from './project-workspace.js';
 
 const get = id => document.getElementById(id);
 const status = get('account-status');
@@ -23,6 +25,8 @@ const timeZone = 'Africa/Johannesburg';
 const timeFormat = new Intl.DateTimeFormat('en-ZA', { timeZone, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
 const dateTimeFormat = new Intl.DateTimeFormat('en-ZA', { timeZone, dateStyle: 'medium', timeStyle: 'short' });
 let client;
+let datePicker;
+let workspace;
 let session;
 let recovering = false;
 const slotRequests = new Map();
@@ -117,6 +121,16 @@ async function loadBookings() {
     const bundle = bundleSessionLabel(booking);
     if (bundle) details.textContent = `${bundle} · ${booking.bundle_tracks} songs · ${details.textContent}`;
     item.append(details);
+    const tools = document.createElement('div');
+    tools.className = 'account-actions';
+    if (bundle || ['requested', 'confirmed'].includes(booking.status)) {
+      const project = document.createElement('button');
+      project.type = 'button';
+      project.className = 'account-text-button';
+      project.textContent = bundle ? 'Project workspace' : 'Session prep';
+      project.addEventListener('click', () => workspace.open(booking));
+      tools.append(project);
+    }
     if (booking.status === 'requested' && new Date(booking.starts_at) > new Date()) {
       const cancel = document.createElement('button');
       cancel.type = 'button';
@@ -133,8 +147,9 @@ async function loadBookings() {
         say(cancelled ? 'Booking request cancelled.' : 'This request is no longer pending. Contact the studio for changes.');
         await loadBookings();
       });
-      item.append(cancel);
+      tools.append(cancel);
     }
+    if (tools.childElementCount) item.append(tools);
     bookingList.append(item);
   }
 }
@@ -152,6 +167,7 @@ function showSession(event, nextSession) {
       slotRequests.set(field, (slotRequests.get(field) || 0) + 1);
     }
     bundleAttempt = undefined;
+    workspace.close();
     bookingRequest++;
     get('staff-bookings').hidden = true;
     slots.replaceChildren();
@@ -238,6 +254,8 @@ get('sign-out').addEventListener('click', async () => {
   say(error ? 'Could not sign out. Try again.' : 'Signed out.');
 });
 
+get('find-session-date').addEventListener('click', () => datePicker.open(date, selectedBundle() ? 4 : Number(hours.value)));
+get('find-second-date').addEventListener('click', () => datePicker.open(secondDate, 4));
 date.addEventListener('change', () => { void loadAvailability(); });
 hours.addEventListener('change', () => { void loadAvailability(); });
 secondDate.addEventListener('change', () => { void loadAvailability(true); });
@@ -305,6 +323,8 @@ if (!projectUrl || !publishableKey) {
   try {
     const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2/+esm');
     client = createClient(projectUrl, publishableKey);
+    datePicker = createOpenDaysPicker(client);
+    workspace = createProjectWorkspace(client);
     client.auth.onAuthStateChange((event, nextSession) => {
       setTimeout(() => {
         if (event === 'INITIAL_SESSION') say('');

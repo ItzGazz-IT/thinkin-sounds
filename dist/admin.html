@@ -9,9 +9,9 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="logo-fix.css?v=booking-admin">
-  <link rel="stylesheet" href="account.css?v=booking-calendar">
+  <link rel="stylesheet" href="account.css?v=project-workspace">
   <link rel="stylesheet" href="admin-calendar.css">
-  <script type="module" src="admin.js?v=bundle-booking"></script>
+  <script type="module" src="admin.js?v=project-workspace"></script>
 </head>
 <body class="inner-page">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -94,6 +94,16 @@
         <button id="cancel-reschedule" class="account-text-button" type="button">Cancel</button>
       </div>
     </form>
+  </dialog>
+  <dialog class="decline-dialog workspace-dialog" id="project-workspace-dialog" aria-labelledby="project-workspace-title">
+    <div class="workspace-dialog-inner">
+      <div class="account-session workspace-heading">
+        <h2 id="project-workspace-title">Project workspace</h2>
+        <button id="close-project-workspace" class="account-text-button" type="button">Close</button>
+      </div>
+      <p id="project-workspace-status" role="status"></p>
+      <div id="project-workspace-body"></div>
+    </div>
   </dialog>
 </body>
 </html>

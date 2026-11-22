@@ -8,8 +8,9 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="logo-fix.css?v=plain-controls">
-  <link rel="stylesheet" href="account.css?v=bundle-booking">
-  <script type="module" src="account.js?v=bundle-booking"></script>
+  <link rel="stylesheet" href="account.css?v=project-workspace">
+  <link rel="stylesheet" href="admin-calendar.css">
+  <script type="module" src="account.js?v=project-workspace"></script>
 </head>
 <body class="inner-page">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -63,7 +64,7 @@
         </div>
         <div class="field small" id="bundle-tracks-field" hidden><label for="bundle-tracks">Songs to mix and master</label><input id="bundle-tracks" type="number" min="1" inputmode="numeric" disabled required></div>
 
-        <div class="field small"><label for="session-date">Session date</label><input id="session-date" type="date" required></div>
+        <div class="field small"><label for="session-date">Session date</label><input id="session-date" type="date" required><button type="button" class="account-text-button date-picker-link" id="find-session-date">Find open dates</button></div>
         <div class="field small" id="session-hours-field"><label for="session-hours">Duration</label>
           <select id="session-hours">
             <option value="1">1 hour</option><option value="2">2 hours</option><option value="3">3 hours</option><option value="4">4 hours</option>
@@ -80,6 +81,7 @@
         <div class="field" id="bundle-second-date" hidden>
           <label for="second-session-date">Second session date (4 hours)</label>
           <input type="date" id="second-session-date" disabled required>
+          <button type="button" class="account-text-button date-picker-link" id="find-second-date">Find open dates for session two</button>
         </div>
         <div class="field" id="bundle-second-slot" hidden>
           <label for="second-session-slot">Second session time</label>
@@ -93,5 +95,28 @@
     </section>
     <p><a href="index.html#contact">Contact the studio</a> · <a href="booking-terms.html">Booking terms</a> · <a href="privacy.html">Privacy</a></p>
   </main>
+  <dialog class="decline-dialog workspace-dialog" id="project-workspace-dialog" aria-labelledby="project-workspace-title">
+    <div class="workspace-dialog-inner">
+      <div class="account-session workspace-heading">
+        <h2 id="project-workspace-title">Project workspace</h2>
+        <button id="close-project-workspace" class="account-text-button" type="button">Close</button>
+      </div>
+      <p id="project-workspace-status" role="status"></p>
+      <div id="project-workspace-body"></div>
+    </div>
+  </dialog>
+  <dialog class="decline-dialog workspace-dialog" id="available-date-dialog" aria-labelledby="available-date-heading">
+    <div class="workspace-dialog-inner">
+      <h2 id="available-date-heading">Choose an available date</h2>
+      <div class="studio-calendar-nav">
+        <button type="button" class="button button-light" id="available-date-prev">Previous</button>
+        <h3 id="available-date-month" aria-live="polite"></h3>
+        <button type="button" class="button button-light" id="available-date-next">Next</button>
+      </div>
+      <div id="available-date-grid" class="studio-calendar-grid" aria-labelledby="available-date-month"></div>
+      <p id="available-date-status" role="status"></p>
+      <button type="button" class="account-text-button" id="available-date-close">Close</button>
+    </div>
+  </dialog>
 </body>
 </html>
