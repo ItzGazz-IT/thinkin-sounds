@@ -9,7 +9,7 @@ const next = get('next-bookings');
 const refresh = get('refresh-bookings');
 const declineDialog = get('decline-dialog');
 const declineReason = get('decline-reason');
-let pendingDecline;
+let reasonAction;
 const rescheduleDialog = get('reschedule-dialog');
 const rescheduleDate = get('reschedule-date');
 const rescheduleSlot = get('reschedule-slot');
@@ -63,10 +63,7 @@ function renderBooking(booking) {
       }
     }), action('Decline', () => {
       if (busy) return;
-      pendingDecline = booking.id;
-      declineReason.value = '';
-      declineReason.setCustomValidity('');
-      declineDialog.showModal();
+      showReasonDialog(booking.id, 'declined');
     }));
     item.append(actions);
   } else if (booking.status === 'confirmed' && new Date(booking.starts_at) > new Date()) {
@@ -81,6 +78,8 @@ function renderBooking(booking) {
       rescheduleDate.value = `${date.year}-${date.month}-${date.day}`;
       rescheduleDialog.showModal();
       void loadRescheduleSlots();
+    }), action('Cancel booking', () => {
+      if (!busy) showReasonDialog(booking.id, 'cancelled');
     }));
   }
   return item;
@@ -92,16 +91,20 @@ async function decideBooking(bookingId, decision, reason) {
   const buttons = [...list.querySelectorAll('button'), get('submit-decline'), get('cancel-decline')];
   buttons.forEach(button => { button.disabled = true; });
   try {
-    const decline = decision === 'declined';
-    const { error } = decline
-      ? await client.rpc('admin_decline_studio_booking', { booking_id: bookingId, reason })
-      : await client.rpc('admin_decide_studio_booking', { booking_id: bookingId, decision });
-    if (decline) declineDialog.close();
+    let result;
+    if (decision === 'confirmed') {
+      result = await client.rpc('admin_decide_studio_booking', { booking_id: bookingId, decision });
+    } else {
+      const rpc = decision === 'declined' ? 'admin_decline_studio_booking' : 'admin_cancel_studio_booking';
+      result = await client.rpc(rpc, { booking_id: bookingId, reason });
+      declineDialog.close();
+    }
+    const { error } = result;
     if (error) {
       status.textContent = error.message;
       return;
     }
-    await loadBookings(decline ? 'Booking declined. Customer email queued.' : 'Booking confirmed. Customer email queued.');
+    await loadBookings(`Booking ${decision}. Customer email queued.`);
   } catch {
     if (declineDialog.open) declineDialog.close();
     status.textContent = 'Could not update the booking. Refresh to check its status.';
@@ -109,6 +112,17 @@ async function decideBooking(bookingId, decision, reason) {
     busy = false;
     buttons.forEach(button => { button.disabled = false; });
   }
+}
+
+function showReasonDialog(bookingId, decision) {
+  const action = decision === 'cancelled' ? 'Cancel' : 'Decline';
+  reasonAction = { bookingId, decision };
+  get('decline-heading').textContent = decision === 'cancelled' ? 'Cancel confirmed booking' : 'Decline booking request';
+  get('submit-decline').textContent = `${action} and email customer`;
+  get('cancel-decline').textContent = 'Go back';
+  declineReason.value = '';
+  declineReason.setCustomValidity('');
+  declineDialog.showModal();
 }
 
 declineReason.addEventListener('input', () => declineReason.setCustomValidity(''));
@@ -120,11 +134,11 @@ get('decline-form').addEventListener('submit', event => {
   event.preventDefault();
   const reason = declineReason.value.trim();
   if (!reason) {
-    declineReason.setCustomValidity('Enter a reason for declining this booking.');
+    declineReason.setCustomValidity('Enter a reason for the customer.');
     declineReason.reportValidity();
     return;
   }
-  void decideBooking(pendingDecline, 'declined', reason);
+  void decideBooking(reasonAction.bookingId, reasonAction.decision, reason);
 });
 
 async function loadRescheduleSlots() {
