@@ -1,7 +1,7 @@
 import { projectUrl, publishableKey } from './account-config.js';
 import { createStudioCalendar } from './admin-calendar.js';
 import { bundleSessionLabel } from './booking-bundles.js';
-import { createProjectWorkspace } from './project-workspace.js';
+import { createProjectWorkspace } from './project-workspace.js?v=project-delivery';
 
 const get = id => document.getElementById(id);
 const status = get('admin-status');
