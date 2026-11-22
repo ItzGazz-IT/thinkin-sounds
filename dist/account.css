@@ -156,3 +156,19 @@
 .decline-dialog p.field {
   margin: 0;
 }
+
+#booking-form .field[hidden],
+#booking-form .form-note[hidden] {
+  display: none;
+}
+
+.bundle-booking-summary {
+  gap: 6px;
+  padding: 14px 16px;
+  border-left: 3px solid var(--yellow);
+  background: #211a2b;
+}
+
+.bundle-booking-summary p {
+  margin: 0;
+}

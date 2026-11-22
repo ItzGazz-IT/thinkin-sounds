@@ -1,5 +1,6 @@
 import { projectUrl, publishableKey } from './account-config.js';
 import { createStudioCalendar } from './admin-calendar.js';
+import { bundleSessionLabel } from './booking-bundles.js';
 
 const get = id => document.getElementById(id);
 const status = get('admin-status');
@@ -52,8 +53,15 @@ function renderBooking(booking) {
   const state = document.createElement('p');
   const labels = { requested: 'Pending', confirmed: 'Confirmed', declined: 'Declined', cancelled: 'Cancelled' };
   state.textContent = labels[booking.status];
+  const bundle = bundleSessionLabel(booking);
+  if (bundle) {
+    const project = document.createElement('p');
+    project.textContent = `${bundle} · ${booking.bundle_tracks} songs · Project ${booking.bundle_request_id.slice(0, 8)}`;
+    details.append(when, clientDetails, project, state);
+  } else {
+    details.append(when, clientDetails, state);
+  }
   if (booking.confirmation_email) state.textContent += ` · Customer email: ${booking.confirmation_email.toLowerCase()}`;
-  details.append(when, clientDetails, state);
   item.append(details);
 
   if (booking.status === 'requested') {
@@ -206,7 +214,7 @@ async function loadBookings(message = '') {
   const id = ++loadId;
   status.textContent = 'Loading bookings…';
   previous.disabled = next.disabled = refresh.disabled = true;
-  const { data, error } = await client.rpc('admin_studio_bookings', { page_offset: offset });
+  const { data, error } = await client.rpc('admin_studio_bookings_with_bundles', { page_offset: offset });
   if (id !== loadId) return;
   refresh.disabled = false;
   if (error) {

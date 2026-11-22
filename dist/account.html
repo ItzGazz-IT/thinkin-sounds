@@ -8,8 +8,8 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="logo-fix.css?v=plain-controls">
-  <link rel="stylesheet" href="account.css">
-  <script type="module" src="account.js?v=booking-admin"></script>
+  <link rel="stylesheet" href="account.css?v=bundle-booking">
+  <script type="module" src="account.js?v=bundle-booking"></script>
 </head>
 <body class="inner-page">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -44,12 +44,27 @@
     <section id="booking-panel" hidden aria-labelledby="booking-heading">
       <div class="account-session"><p id="signed-in-email"></p><a id="staff-bookings" href="admin.html" hidden>Booking admin</a><button type="button" class="account-text-button" id="sign-out">Sign out</button></div>
       <h2 id="booking-heading">Book studio time</h2>
-      <p>Recording sessions only. The studio confirms your booking after agreeing the scope and deposit.</p>
+      <p>Request a recording session or choose a project bundle. The studio confirms each recording date after agreeing the scope and deposit.</p>
       <p>Friday 17:00–midnight, Saturday 08:00–20:00, Sunday 08:00–17:00. All times are SAST.</p>
       <p><a href="index.html?service=late-saturday#contact">Ask about a late Saturday session</a> or <a href="index.html#services">enquire about mixing, mastering, and other online services</a>.</p>
       <form id="booking-form">
+        <div class="field"><label for="booking-package">What are you booking?</label>
+          <select id="booking-package">
+            <option value="session">Studio recording only</option>
+            <option value="ep">EP bundle · R1 500</option>
+            <option value="mixtape">Mixtape bundle · R2 500</option>
+            <option value="album">Album bundle · R4 000</option>
+          </select>
+        </div>
+        <div class="field bundle-booking-summary" id="booking-bundle-summary" hidden>
+          <strong id="booking-bundle-includes"></strong>
+          <p id="booking-bundle-deposit"></p>
+          <p>Includes online mixing and mastering, two revision rounds per song, and final WAV and MP3 files. Have your songs rehearsed and bring beats you have permission to use.</p>
+        </div>
+        <div class="field small" id="bundle-tracks-field" hidden><label for="bundle-tracks">Songs to mix and master</label><input id="bundle-tracks" type="number" min="1" inputmode="numeric" disabled required></div>
+
         <div class="field small"><label for="session-date">Session date</label><input id="session-date" type="date" required></div>
-        <div class="field small"><label for="session-hours">Duration</label>
+        <div class="field small" id="session-hours-field"><label for="session-hours">Duration</label>
           <select id="session-hours">
             <option value="1">1 hour</option><option value="2">2 hours</option><option value="3">3 hours</option><option value="4">4 hours</option>
             <option value="5">5 hours</option><option value="6">6 hours</option><option value="7">7 hours</option><option value="8">8 hours</option>
@@ -60,8 +75,17 @@
             <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
           </select>
         </div>
-        <div class="field"><label for="session-slot">Available times</label><select id="session-slot" required disabled></select></div>
+        <div class="field"><label for="session-slot" id="session-slot-label">Available times</label><select id="session-slot" required disabled></select></div>
         <p id="availability-status" role="status" class="form-note"></p>
+        <div class="field" id="bundle-second-date" hidden>
+          <label for="second-session-date">Second session date (4 hours)</label>
+          <input type="date" id="second-session-date" disabled required>
+        </div>
+        <div class="field" id="bundle-second-slot" hidden>
+          <label for="second-session-slot">Second session time</label>
+          <select id="second-session-slot" disabled required></select>
+        </div>
+        <p id="second-availability-status" role="status" class="form-note" hidden></p>
         <div class="account-actions"><button class="button" id="request-booking" disabled>Request this session</button></div>
       </form>
       <h2>Your bookings</h2>
