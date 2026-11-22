@@ -1,4 +1,5 @@
 import { projectUrl, publishableKey } from './account-config.js';
+import { studioBundles, bundleSessionLabel } from './booking-bundles.js';
 
 const get = id => document.getElementById(id);
 const status = get('account-status');
@@ -8,6 +9,12 @@ const bookings = get('booking-panel');
 const date = get('session-date');
 const hours = get('session-hours');
 const slots = get('session-slot');
+const packageField = get('booking-package');
+const songCount = get('bundle-tracks');
+const secondDate = get('second-session-date');
+const secondSlots = get('second-session-slot');
+const secondStatus = get('second-availability-status');
+const selectedBundle = () => studioBundles[packageField.value];
 const book = get('request-booking');
 const availabilityStatus = get('availability-status');
 const bookingList = get('booking-list');
@@ -18,7 +25,9 @@ const dateTimeFormat = new Intl.DateTimeFormat('en-ZA', { timeZone, dateStyle: '
 let client;
 let session;
 let recovering = false;
-let availabilityRequest = 0;
+const slotRequests = new Map();
+let submitting = false;
+let bundleAttempt;
 let bookingRequest = 0;
 
 const say = message => { status.textContent = message; };
@@ -30,37 +39,67 @@ function studioDate(daysAhead) {
   return day.toISOString().slice(0, 10);
 }
 
-async function loadAvailability() {
-  const request = ++availabilityRequest;
-  slots.replaceChildren(new Option('Choose an available time', ''));
-  slots.disabled = book.disabled = true;
-  availabilityStatus.textContent = '';
-  if (!session || !date.value || !date.validity.valid) return;
-  availabilityStatus.textContent = 'Checking available times…';
+function syncSubmit() {
+  book.disabled = submitting || !slots.value || Boolean(selectedBundle()?.sessions === 2 && !secondSlots.value);
+}
 
-  const { data, error } = await client.rpc('studio_availability', {
-    booking_date: date.value,
-    booking_hours: Number(hours.value)
-  });
-  if (request !== availabilityRequest) return;
-  if (error) {
-    availabilityStatus.textContent = 'Could not load times. Change the date or duration to try again.';
-    return;
+function syncBundle() {
+  const bundle = selectedBundle();
+  const needsSecond = bundle?.sessions === 2;
+  get('booking-bundle-summary').hidden = get('bundle-tracks-field').hidden = !bundle;
+  songCount.disabled = !bundle;
+  get('session-hours-field').hidden = hours.disabled = Boolean(bundle);
+  get('bundle-second-date').hidden = get('bundle-second-slot').hidden = secondStatus.hidden = !needsSecond;
+  secondDate.disabled = !needsSecond;
+  if (!needsSecond) secondSlots.disabled = true;
+  get('session-slot-label').textContent = needsSecond ? 'First session time' : 'Available times';
+  book.textContent = bundle ? 'Request this bundle' : 'Request this session';
+  if (bundle) {
+    songCount.max = bundle.tracks;
+    if (!songCount.value || Number(songCount.value) > bundle.tracks) songCount.value = bundle.tracks;
+    const recording = needsSecond ? 'Two 4-hour sessions' : 'One 4-hour session';
+    get('booking-bundle-includes').textContent = `${bundle.price} · Up to ${bundle.tracks} songs · ${recording}`;
+    get('booking-bundle-deposit').textContent = `${bundle.deposit} deposit after scope and dates are agreed. Each date remains pending until the studio confirms it.`;
   }
-  for (const slot of data) {
-    const option = new Option(`${timeFormat.format(new Date(slot.starts_at))} · ${slot.room_name}`, slot.starts_at);
-    option.dataset.roomId = slot.room_id;
-    slots.append(option);
+}
+
+async function loadAvailability(second = false) {
+  const dateField = second ? secondDate : date;
+  const slotField = second ? secondSlots : slots;
+  const message = second ? secondStatus : availabilityStatus;
+  const request = (slotRequests.get(slotField) || 0) + 1;
+  slotRequests.set(slotField, request);
+  slotField.replaceChildren(new Option('Choose an available time', ''));
+  slotField.disabled = true;
+  syncSubmit();
+  message.textContent = '';
+  if (!session || dateField.disabled || !dateField.value || !dateField.validity.valid) return;
+  message.textContent = 'Checking available times…';
+  const bundle = selectedBundle();
+  try {
+    const { data, error } = await client.rpc('studio_availability', {
+      booking_date: dateField.value,
+      booking_hours: bundle ? 4 : Number(hours.value)
+    });
+    if (request !== slotRequests.get(slotField)) return;
+    if (error) throw error;
+    for (const slot of data) {
+      const option = new Option(`${timeFormat.format(new Date(slot.starts_at))} · ${slot.room_name}`, slot.starts_at);
+      option.dataset.roomId = slot.room_id;
+      slotField.append(option);
+    }
+    slotField.disabled = data.length === 0;
+    message.textContent = data.length ? '' : bundle ? 'No 4-hour slots on this date. Try another day.' : 'No matching times. Try another date or a shorter session.';
+  } catch {
+    if (request === slotRequests.get(slotField)) message.textContent = 'Could not load times. Change the date to try again.';
   }
-  slots.disabled = data.length === 0;
-  availabilityStatus.textContent = data.length ? '' : 'No matching times. Try another date or a shorter session.';
 }
 
 async function loadBookings() {
   const request = ++bookingRequest;
   if (!session) return;
   const { data, error } = await client.from('studio_bookings')
-    .select('id, starts_at, hours, headcount, status').order('starts_at', { ascending: false }).limit(100);
+    .select('id, starts_at, hours, headcount, status, bundle_code, bundle_session, bundle_tracks').order('starts_at', { ascending: false }).limit(100);
   if (request !== bookingRequest) return;
 
   bookingList.replaceChildren();
@@ -75,6 +114,8 @@ async function loadBookings() {
     const details = document.createElement('span');
     const status = booking.status === 'requested' ? 'Awaiting studio confirmation' : booking.status;
     details.textContent = `${dateTimeFormat.format(new Date(booking.starts_at))} · ${booking.hours}h · ${booking.headcount} attending · ${status}`;
+    const bundle = bundleSessionLabel(booking);
+    if (bundle) details.textContent = `${bundle} · ${booking.bundle_tracks} songs · ${details.textContent}`;
     item.append(details);
     if (booking.status === 'requested' && new Date(booking.starts_at) > new Date()) {
       const cancel = document.createElement('button');
@@ -107,23 +148,33 @@ function showSession(event, nextSession) {
   recovery.hidden = !recovering;
   bookings.hidden = !session || recovering;
   if (bookings.hidden) {
-    availabilityRequest++;
+    for (const field of [slots, secondSlots]) {
+      slotRequests.set(field, (slotRequests.get(field) || 0) + 1);
+    }
+    bundleAttempt = undefined;
     bookingRequest++;
     get('staff-bookings').hidden = true;
     slots.replaceChildren();
+    secondSlots.replaceChildren();
     bookingList.replaceChildren();
     return;
   }
   get('signed-in-email').textContent = session.user.email;
   if (previousUser !== session.user.id || event === 'PASSWORD_UPDATED') {
-    date.min = studioDate(0);
-    date.max = studioDate(90);
-    date.value = date.min;
+    for (const field of [date, secondDate]) {
+      field.min = studioDate(0);
+      field.max = studioDate(90);
+      field.value = field.min;
+    }
+    const linkedBundle = new URLSearchParams(location.search).get('bundle');
+    packageField.value = Object.hasOwn(studioBundles, linkedBundle) ? linkedBundle : 'session';
+    syncBundle();
     const userId = session.user.id;
     void client.rpc('is_studio_admin').then(({ data }) => {
       if (session?.user.id === userId) get('staff-bookings').hidden = data !== true;
     });
     void loadAvailability();
+    void loadAvailability(true);
     void loadBookings();
   }
 }
@@ -187,21 +238,64 @@ get('sign-out').addEventListener('click', async () => {
   say(error ? 'Could not sign out. Try again.' : 'Signed out.');
 });
 
-date.addEventListener('change', loadAvailability);
-hours.addEventListener('change', loadAvailability);
-slots.addEventListener('change', () => { book.disabled = !slots.value; });
+date.addEventListener('change', () => { void loadAvailability(); });
+hours.addEventListener('change', () => { void loadAvailability(); });
+secondDate.addEventListener('change', () => { void loadAvailability(true); });
+for (const field of [slots, secondSlots]) field.addEventListener('change', syncSubmit);
+packageField.addEventListener('change', () => {
+  syncBundle();
+  void loadAvailability();
+  void loadAvailability(true);
+});
+
+function chosenSlot(field) {
+  return { room_id: Number(field.selectedOptions[0].dataset.roomId), starts_at: field.value };
+}
+
 get('booking-form').addEventListener('submit', async event => {
   event.preventDefault();
-  if (!slots.value || book.disabled) return;
-  book.disabled = true;
-  const { error } = await client.rpc('request_studio_booking', {
-    requested_room: Number(slots.selectedOptions[0].dataset.roomId),
-    requested_start: slots.value,
-    requested_hours: Number(hours.value),
-    requested_headcount: Number(get('session-headcount').value)
-  });
-  say(error ? error.message : 'Request received. The studio will confirm availability and deposit details.');
-  await Promise.all([loadAvailability(), loadBookings()]);
+  if (book.disabled || submitting) return;
+  const bundle = selectedBundle();
+  const headcount = Number(get('session-headcount').value);
+  const first = chosenSlot(slots);
+  const selected = bundle?.sessions === 2 ? [first, chosenSlot(secondSlots)] : [first];
+  if (selected.length === 2 && Math.abs(Date.parse(first.starts_at) - Date.parse(selected[1].starts_at)) < 4 * 60 * 60 * 1000) {
+    say('Choose two recording times that do not overlap.');
+    return;
+  }
+  submitting = true;
+  syncSubmit();
+  try {
+    let result;
+    if (bundle) {
+      const fields = {
+        requested_bundle: packageField.value, requested_tracks: songCount.valueAsNumber,
+        requested_headcount: headcount, requested_slots: selected
+      };
+      const signature = JSON.stringify(fields);
+      if (bundleAttempt?.signature !== signature) bundleAttempt = { signature, id: crypto.randomUUID() };
+      result = await client.rpc('request_studio_bundle', { ...fields, request_id: bundleAttempt.id });
+    } else {
+      result = await client.rpc('request_studio_booking', {
+        requested_room: first.room_id,
+        requested_start: first.starts_at,
+        requested_hours: Number(hours.value),
+        requested_headcount: headcount
+      });
+    }
+    say(result.error ? result.error.message : bundle
+      ? 'Bundle request received. Check the status of each session under Your bookings.'
+      : 'Request received. The studio will confirm availability and deposit details.');
+    if (!result.error) {
+      await Promise.all([loadAvailability(), loadAvailability(true), loadBookings()]);
+    }
+  } catch {
+    say('Could not verify the request. Check Your bookings before trying again.');
+    await loadBookings();
+  } finally {
+    submitting = false;
+    syncSubmit();
+  }
 });
 
 if (!projectUrl || !publishableKey) {

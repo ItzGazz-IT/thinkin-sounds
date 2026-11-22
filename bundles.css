@@ -80,3 +80,12 @@
 @media (max-width: 780px) {
   .bundle-grid, .bundle-details { grid-template-columns: 1fr; }
 }
+
+.bundle-book-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 8px;
+  color: var(--yellow);
+  font-weight: 700;
+}
