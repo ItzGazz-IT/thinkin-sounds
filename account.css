@@ -1,0 +1,106 @@
+.account-main {
+  width: min(100%, 820px);
+  margin: 0 auto;
+  padding: 145px clamp(18px, 5vw, 46px) 64px;
+}
+
+.account-main h1,
+.account-main h2 {
+  font-family: var(--display);
+  line-height: 1.1;
+  margin: 0 0 18px;
+}
+
+.account-main h1 {
+  font-size: clamp(2.75rem, 9vw, 5rem);
+  text-transform: uppercase;
+}
+
+.account-main h2 {
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+}
+
+.account-main section,
+.account-main form {
+  margin-bottom: 32px;
+}
+
+.account-main form {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  padding: clamp(16px, 5vw, 36px);
+}
+
+.account-main .field {
+  min-width: 0;
+}
+
+.account-main input,
+.account-main select,
+.account-main button {
+  min-height: 44px;
+  min-width: 0;
+}
+
+.account-actions,
+.account-session {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+}
+
+.account-actions {
+  grid-column: 1 / -1;
+}
+
+.account-text-button {
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--yellow);
+  text-decoration: underline;
+  background: none;
+  cursor: pointer;
+}
+
+.account-main button:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+.account-header > a:last-child {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.account-bookings {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.account-bookings li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  border-bottom: 1px solid #ffffff26;
+  padding: 12px 0;
+}
+
+#account-status {
+  color: var(--yellow);
+}
+
+@media (max-width: 460px) {
+  .account-main form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .account-main .field {
+    grid-column: 1;
+  }
+}

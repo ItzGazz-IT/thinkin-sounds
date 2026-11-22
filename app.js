@@ -27,6 +27,9 @@ if (enquiryForm) {
   if (selectedBeat) {
     serviceField.value = 'Beat enquiry';
     setEnquiryBeat(selectedBeat);
+  } else if (enquiryParams.get('service') === 'late-saturday') {
+    serviceField.value = 'Vocal recording';
+    document.querySelector('#notes').value = 'Late Saturday studio session: ';
   } else if (enquiryParams.get('service') === 'custom-beat') {
     serviceField.value = 'Custom beat';
   }

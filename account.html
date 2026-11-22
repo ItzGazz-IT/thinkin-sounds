@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09090b">
+  <title>Studio Account | Thinkin’ Sounds</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="logo-fix.css?v=plain-controls">
+  <link rel="stylesheet" href="account.css">
+  <script type="module" src="account.js"></script>
+</head>
+<body class="inner-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header account-header">
+    <a class="brand" href="index.html" aria-label="Thinkin’ Sounds home"><img src="assets/logos/logo-color-transparent.webp" alt="Thinkin’ Sounds" width="500" height="500"></a>
+    <a href="index.html">Studio home</a>
+  </header>
+  <main class="account-main" id="main">
+    <p class="eyebrow">Thinkin’ Sounds</p>
+    <h1>Studio account</h1>
+    <p id="account-status" role="status" aria-live="polite"></p>
+    <noscript><p>Enable JavaScript to use studio accounts and bookings.</p></noscript>
+    <section id="sign-in-panel" hidden aria-labelledby="auth-title">
+      <h2 id="auth-title">Sign in or create an account</h2>
+      <form id="auth-form">
+        <div class="field"><label for="email">Email</label><input id="email" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required></div>
+        <div class="account-actions">
+          <button class="button" name="intent" value="sign-in">Sign in</button>
+          <button class="button button-light" name="intent" value="sign-up">Create account</button>
+          <button class="account-text-button" name="intent" value="reset" formnovalidate>Email a reset link</button>
+        </div>
+      </form>
+    </section>
+    <section id="reset-panel" hidden aria-labelledby="reset-title">
+      <h2 id="reset-title">Choose a new password</h2>
+      <form id="reset-form">
+        <div class="field"><label for="new-password">New password</label><input id="new-password" type="password" autocomplete="new-password" required minlength="8"></div>
+        <div class="account-actions"><button class="button">Save password</button></div>
+      </form>
+    </section>
+    <section id="booking-panel" hidden aria-labelledby="booking-heading">
+      <div class="account-session"><p id="signed-in-email"></p><button type="button" class="account-text-button" id="sign-out">Sign out</button></div>
+      <h2 id="booking-heading">Book studio time</h2>
+      <p>Recording sessions only. The studio confirms your booking after agreeing the scope and deposit.</p>
+      <p>Friday 17:00–midnight, Saturday 08:00–20:00, Sunday 08:00–17:00. All times are SAST.</p>
+      <p><a href="index.html?service=late-saturday#contact">Ask about a late Saturday session</a> or <a href="index.html#services">enquire about mixing, mastering, and other online services</a>.</p>
+      <form id="booking-form">
+        <div class="field small"><label for="session-date">Session date</label><input id="session-date" type="date" required></div>
+        <div class="field small"><label for="session-hours">Duration</label>
+          <select id="session-hours">
+            <option value="1">1 hour</option><option value="2">2 hours</option><option value="3">3 hours</option><option value="4">4 hours</option>
+            <option value="5">5 hours</option><option value="6">6 hours</option><option value="7">7 hours</option><option value="8">8 hours</option>
+          </select>
+        </div>
+        <div class="field small"><label for="session-headcount">People attending (max. 5)</label>
+          <select id="session-headcount">
+            <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+          </select>
+        </div>
+        <div class="field"><label for="session-slot">Available times</label><select id="session-slot" required disabled></select></div>
+        <p id="availability-status" role="status" class="form-note"></p>
+        <div class="account-actions"><button class="button" id="request-booking" disabled>Request this session</button></div>
+      </form>
+      <h2>Your bookings</h2>
+      <ul id="booking-list" class="account-bookings"></ul>
+    </section>
+    <p><a href="index.html#contact">Contact the studio</a> · <a href="booking-terms.html">Booking terms</a> · <a href="privacy.html">Privacy</a></p>
+  </main>
+</body>
+</html>
