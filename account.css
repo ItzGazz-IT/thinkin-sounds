@@ -172,3 +172,41 @@
 .bundle-booking-summary p {
   margin: 0;
 }
+
+.date-picker-link {
+  align-self: flex-start;
+  min-height: 44px;
+}
+
+.workspace-dialog {
+  width: min(calc(100% - 24px), 620px);
+}
+.workspace-dialog-inner {
+  padding: clamp(14px, 4vw, 26px);
+  overflow-wrap: anywhere;
+}
+.workspace-heading {
+  justify-content: space-between;
+}
+.workspace-dialog button {
+  min-height: 44px;
+}
+.workspace-dialog #available-date-grid button:enabled {
+  color: var(--yellow);
+  border-color: #d4ae36;
+}
+.workspace-dialog #available-date-grid button:disabled {
+  opacity: .42;
+}
+.workspace-dialog #project-workspace-status {
+  color: var(--yellow);
+}
+.workspace-dialog #project-workspace-body form {
+  margin-bottom: 18px;
+  border: 1px solid #ffffff26;
+}
+.workspace-dialog #project-workspace-body input,
+.workspace-dialog #project-workspace-body select,
+.workspace-dialog #project-workspace-body textarea {
+  font-size: 16px;
+}
