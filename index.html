@@ -17,6 +17,7 @@
   <link rel="preload" as="image" href="assets/studio/01-engineer-control-room.webp" type="image/webp">
   <link rel="stylesheet" href="styles.css?v=plain-controls">
   <link rel="stylesheet" href="logo-fix.css?v=booking-admin">
+  <link rel="stylesheet" href="bundles.css">
   <script src="app.js?v=booking" defer></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"MusicRecordingStudio","name":"Thinkin’ Sounds","url":"https://thinkinsounds.co.za/","image":"https://thinkinsounds.co.za/assets/og-share.jpg","telephone":["+27 82 653 5019","+27 81 251 6522"],"address":{"@type":"PostalAddress","streetAddress":"30 Pieter Raath Avenue","addressLocality":"Lambton, Germiston","postalCode":"1401","addressCountry":"ZA"},"priceRange":"R150–R2000+"}</script>
 </head>
@@ -28,7 +29,7 @@
     <a class="mobile-account-link" href="account.html">Account</a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span></span><span class="sr-only">Menu</span></button>
     <nav id="site-nav" aria-label="Main navigation">
-      <a href="#services">Services</a><a href="#studio">Studio</a><a href="#engineers">Engineers</a><a href="beats.html">Beats</a><a class="desktop-account-link" href="account.html">Account</a><a class="button button-small" href="account.html">Book a session</a>
+      <a href="#services">Services</a><a href="#bundles">Bundles</a><a href="#studio">Studio</a><a href="#engineers">Engineers</a><a href="beats.html">Beats</a><a class="desktop-account-link" href="account.html">Account</a><a class="button button-small" href="account.html">Book a session</a>
     </nav>
   </header>
 
@@ -48,20 +49,62 @@
     <section class="marquee" aria-label="Studio capabilities"><div>RECORDING <i aria-hidden="true"></i> MIXING <i aria-hidden="true"></i> MASTERING <i aria-hidden="true"></i> BEAT PRODUCTION <i aria-hidden="true"></i> RECORDING <i aria-hidden="true"></i> MIXING <i aria-hidden="true"></i></div></section>
 
     <section class="section services" id="services">
-      <div class="section-heading"><p class="eyebrow">Make the track real</p><h2>One studio.<br>Every stage.</h2><p>Bring the lyrics, the stems or just the first idea. We’ll meet the song where it is and help you take it further.</p></div>
+      <div class="section-heading"><p class="eyebrow">Make the track real</p><h2>One studio.<br>Every stage.</h2><p>Book the booth for vocal recording. Mixing, mastering and custom beat production are handled online, from file delivery to feedback.</p></div>
       <div class="service-grid">
         <article class="service-card featured"><span>01</span><h3>Vocal recording</h3><p>Capture lead takes, doubles, harmonies and ad-libs with an engineer in the room.</p><strong>From R150 / hour</strong><a href="account.html">Book studio time</a></article>
-        <article class="service-card"><span>02</span><h3>Mixing</h3><p>Balance, tone and effects shaped around your performance and rough mix.</p><strong>From R400 / song</strong><a href="#contact" data-service="Mixing">Request a mix</a></article>
-        <article class="service-card"><span>03</span><h3>Mastering</h3><p>Release-ready tonal balance, dynamics and level from your approved WAV.</p><strong>R250 / song</strong><a href="#contact" data-service="Mastering">Request mastering</a></article>
-        <article class="service-card"><span>04</span><h3>Mix + master</h3><p>One team takes your separate tracks through mix review to the final master.</p><strong>From R600 / song</strong><a href="#contact" data-service="Mix and master">Get a quote</a></article>
-        <article class="service-card"><span>05</span><h3>Custom beats</h3><p>Build the tempo, groove and arrangement around your demo, reference or idea.</p><strong>From R1 500 / song</strong><a href="#contact" data-service="Custom beat">Start a custom beat</a></article>
+        <article class="service-card"><span>02</span><h3>Mixing</h3><p>Send your stems and rough mix online. We’ll shape the balance, tone and effects around your performance.</p><strong>From R400 / song</strong><a href="#contact" data-service="Mixing">Request a mix</a></article>
+        <article class="service-card"><span>03</span><h3>Mastering</h3><p>Send your approved WAV online for a release-ready master.</p><strong>R250 / song</strong><a href="#contact" data-service="Mastering">Request mastering</a></article>
+        <article class="service-card"><span>04</span><h3>Mix + master</h3><p>Send your tracks online and work with one team from first mix to final master.</p><strong>From R600 / song</strong><a href="#contact" data-service="Mix and master">Get a quote</a></article>
+        <article class="service-card"><span>05</span><h3>Custom beats</h3><p>Share a demo, reference or idea online. We’ll build the track around your direction.</p><strong>From R1 500 / song</strong><a href="#contact" data-service="Custom beat">Start a custom beat</a></article>
         <article class="service-card"><span>06</span><h3>Full single production</h3><p>Custom beat, up to four recording hours, mixing and mastering for one song.</p><strong>From R2 000 / session</strong><a href="#contact" data-service="Full single production">Plan your single</a></article>
+      </div>
+    </section>
+
+    <section class="section project-bundles" id="bundles" aria-labelledby="bundles-heading">
+      <p class="eyebrow">Recording + mix and master</p>
+      <h2 id="bundles-heading">Your next project starts here.</h2>
+      <p class="bundle-intro">Bring the songs and your beats. Record your vocals in the booth, then work with us online to take every track through the mix and master.</p>
+      <div class="bundle-grid">
+        <article class="bundle-card">
+          <h3>EP</h3>
+          <p class="bundle-price">R1 500</p>
+          <p class="bundle-description">Four songs to introduce your sound or follow up a single.</p>
+          <ul>
+            <li><strong>Up to 4 songs</strong> mixed and mastered</li>
+            <li>One 4-hour recording session</li>
+          </ul>
+          <a class="button" href="#contact" data-service="EP bundle">Plan your EP</a>
+        </article>
+        <article class="bundle-card bundle-card-featured">
+          <h3>Mixtape</h3>
+          <p class="bundle-price">R2 500</p>
+          <p class="bundle-description">Build a deeper tracklist, with room to switch up the sound.</p>
+          <ul>
+            <li><strong>Up to 7 songs</strong> mixed and mastered</li>
+            <li>Two 4-hour recording sessions</li>
+          </ul>
+          <a class="button" href="#contact" data-service="Mixtape bundle">Plan your mixtape</a>
+        </article>
+        <article class="bundle-card">
+          <h3>Album</h3>
+          <p class="bundle-price">R4 000</p>
+          <p class="bundle-description">Give a full-length project a consistent mix and finish.</p>
+          <ul>
+            <li><strong>Up to 10 songs</strong> mixed and mastered</li>
+            <li>Two 4-hour recording sessions</li>
+          </ul>
+          <a class="button" href="#contact" data-service="Album bundle">Plan your album</a>
+        </article>
+      </div>
+      <div class="bundle-details">
+        <p><strong>Included in every bundle</strong> Two rounds of mix and master revisions per song, with a final WAV master and MP3 for each track.</p>
+        <p><strong>Booking your project</strong> Bring beats you have permission to use. Custom beats, beat licences, extra songs and extra studio time are quoted separately. We’ll agree your delivery date before you pay the 25% deposit.</p>
       </div>
     </section>
 
     <section class="studio-split" id="studio">
       <div class="studio-image"><img src="assets/studio/04-vocal-booth.webp" alt="Dedicated vocal booth at Thinkin’ Sounds" loading="lazy" decoding="async"></div>
-      <div class="studio-copy"><p class="eyebrow">The space</p><h2>Built to keep you in the moment.</h2><p>Thinkin’ Sounds pairs a dedicated vocal booth with a control room for recording, producing and mixing. No giant room. No crowd. Just the setup, the engineer and the time to get the take right.</p><ul><li>One-hour minimum booking</li><li>Up to eight hours per session</li><li>25% deposit to secure the booking</li><li>Two revisions included</li><li>Maximum 48-hour turnaround</li></ul><a class="button button-dark" href="#contact">Check availability</a></div>
+      <div class="studio-copy"><p class="eyebrow">The space</p><h2>Built to keep you in the moment.</h2><p>Thinkin’ Sounds pairs a dedicated vocal booth with a control room for recording, producing and mixing. No giant room. No crowd. Just the setup, the engineer and the time to get the take right.</p><ul><li>One-hour minimum booking</li><li>Up to eight hours per session</li><li>25% deposit to secure the booking</li><li>Two revisions included</li><li>Project delivery dates agreed upfront</li></ul><a class="button button-dark" href="#contact">Check availability</a></div>
     </section>
 
     <section class="section gallery" aria-label="Inside Thinkin’ Sounds">
@@ -106,7 +149,7 @@
         <article><span>01</span><h3>Request a time</h3><p>Send the service, preferred date, deadline and track count. We’ll confirm what is available.</p></article>
         <article><span>02</span><h3>Confirm the scope</h3><p>Recording starts at one hour and sessions run up to eight hours. Extra work is agreed before it begins.</p></article>
         <article><span>03</span><h3>Secure the booking</h3><p>A 25% deposit secures a confirmed slot. Rescheduling and deposit treatment are confirmed in writing before payment.</p></article>
-        <article><span>04</span><h3>Review the work</h3><p>Two revisions are included. The standard maximum turnaround is 48 hours once the required files and direction are ready.</p></article>
+        <article><span>04</span><h3>Review the work</h3><p>Two revisions are included. We agree a delivery date upfront for multi-song projects.</p></article>
       </div>
     </section>
 
@@ -117,7 +160,7 @@
         <details><summary>What should I send for mixing?</summary><p>Send each track from the same start point, plus your rough mix and one or two reference songs. We’ll confirm the preferred file format before work starts.</p></details>
         <details><summary>Can I book mastering without mixing?</summary><p>Yes. Send an approved stereo WAV with enough headroom and no limiter unless the studio asks for a reference-limited version too.</p></details>
         <details><summary>Does submitting the form confirm my session?</summary><p>No. It opens a prepared WhatsApp message. Your booking is confirmed only after the studio agrees the date, scope, price and deposit.</p></details>
-        <details><summary>How do revisions and turnaround work?</summary><p>Two revisions are included and the standard maximum turnaround is 48 hours once all required files and direction are received. Larger edits or new creative direction may need a separate quote.</p></details>
+        <details><summary>How do revisions and turnaround work?</summary><p>Standalone work normally takes up to 48 hours once we have the required files and direction. For project bundles, we agree the delivery date upfront and include two revision rounds per song. Larger edits or new creative direction may need a separate quote.</p></details>
       </div>
     </section>
 
@@ -126,7 +169,7 @@
       <form id="enquiry-form">
         <div class="field"><label for="name">Name or artist name</label><input id="name" name="name" autocomplete="name" required></div>
         <div class="field"><label for="contact-detail">Email or WhatsApp</label><input id="contact-detail" name="contact" required></div>
-        <div class="field"><label for="service">What do you need?</label><select id="service" name="service" required><option value="">Choose a service</option><option>Vocal recording</option><option>Mixing</option><option>Mastering</option><option>Mix and master</option><option>Custom beat</option><option>Beat enquiry</option><option>Record and release</option><option>Full single production</option><option>Session with ItzGazz</option><option>Session with LaCASA</option></select></div>
+        <div class="field"><label for="service">What do you need?</label><select id="service" name="service" required><option value="">Choose a service</option><option>Vocal recording</option><option>Mixing</option><option>Mastering</option><option>Mix and master</option><option>Custom beat</option><option>Beat enquiry</option><option>Record and release</option><option>Full single production</option><option>EP bundle</option><option>Mixtape bundle</option><option>Album bundle</option><option>Session with ItzGazz</option><option>Session with LaCASA</option></select></div>
         <div class="field small"><label for="tracks">Track count</label><input id="tracks" name="tracks" type="number" min="1" inputmode="numeric"></div>
         <div class="field small"><label for="preferred-date">Preferred date</label><input id="preferred-date" name="preferred_date" type="date"></div>
         <div class="field small"><label for="release-date">Target release date</label><input id="release-date" name="release_date" type="date"></div>
