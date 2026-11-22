@@ -1,7 +1,7 @@
 import { projectUrl, publishableKey } from './account-config.js';
 import { createStudioCalendar } from './admin-calendar.js';
 import { bundleSessionLabel } from './booking-bundles.js';
-import { createProjectWorkspace } from './project-workspace.js?v=project-delivery';
+import { createProjectWorkspace } from './project-workspace.js?v=project-feedback';
 
 const get = id => document.getElementById(id);
 const status = get('admin-status');
@@ -31,6 +31,10 @@ const limit = 50;
 let client;
 let calendar;
 let workspace;
+const projectParam = new URLSearchParams(location.search).get('project');
+let linkedProject = projectParam && /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i.test(projectParam) ? projectParam : null;
+if (linkedProject) get('admin-login').querySelector('a').href = 'account.html?staff_project=' + encodeURIComponent(linkedProject);
+
 let offset = 0;
 let loadId = 0;
 let busy = false;
@@ -246,6 +250,11 @@ async function loadBookings(message = '') {
   previous.disabled = offset === 0;
   next.disabled = data.length <= limit;
   status.textContent = message;
+  if (linkedProject) {
+    const project = linkedProject;
+    linkedProject = null;
+    workspace.open({ id: project, bundle_code: true });
+  }
 }
 
 previous.addEventListener('click', () => { offset -= limit; void loadBookings(); });
