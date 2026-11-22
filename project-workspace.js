@@ -129,6 +129,10 @@ export function createProjectWorkspace(client, staff = false) {
     }
 
     const form = document.createElement('form');
+    const notice = document.createElement('p');
+    notice.className = 'field';
+    notice.textContent = 'The first time you mark the first mix or final masters ready, the customer receives an email linking to this workspace.';
+    form.append(notice);
     const stage = field(form, 'Project stage', { tag: 'select' });
     stage.append(new Option('Awaiting files', '0'), ...milestones.map(([, label], index) => new Option(label, String(index + 1))));
     stage.value = data.masters_ready_at ? '3' : data.first_mix_at ? '2' : data.files_received_at ? '1' : '0';

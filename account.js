@@ -1,7 +1,7 @@
 import { projectUrl, publishableKey } from './account-config.js';
 import { studioBundles, bundleSessionLabel } from './booking-bundles.js';
 import { createOpenDaysPicker } from './open-days.js';
-import { createProjectWorkspace } from './project-workspace.js';
+import { createProjectWorkspace } from './project-workspace.js?v=project-delivery';
 
 const get = id => document.getElementById(id);
 const status = get('account-status');
@@ -154,6 +154,23 @@ async function loadBookings() {
   }
 }
 
+async function openLinkedProject(userId) {
+  const project = new URLSearchParams(location.search).get('project');
+  if (!project || !/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i.test(project)) return;
+  try {
+    const { data, error } = await client.from('studio_bookings')
+      .select('id, status, bundle_code').eq('id', project).maybeSingle();
+    if (session?.user.id !== userId || recovering) return;
+    if (error || !data?.bundle_code) {
+      say('This project is unavailable for this account. Check Your bookings below.');
+      return;
+    }
+    workspace.open(data);
+  } catch {
+    say('Could not open the linked project. Check Your bookings below.');
+  }
+}
+
 function showSession(event, nextSession) {
   const previousUser = session?.user.id;
   session = nextSession;
@@ -192,6 +209,7 @@ function showSession(event, nextSession) {
     void loadAvailability();
     void loadAvailability(true);
     void loadBookings();
+    void openLinkedProject(userId);
   }
 }
 
