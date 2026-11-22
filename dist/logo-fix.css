@@ -625,3 +625,27 @@ footer .legal-links { flex-wrap: wrap; font-size: 0.8rem; color: #aaa9b1; }
     bottom: max(16px, env(safe-area-inset-bottom));
   }
 }
+
+.mobile-account-link {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .mobile-account-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-left: auto;
+    margin-right: 8px;
+    color: #fff;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+}
+
+@media (max-width: 900px) {
+  .site-header nav > .desktop-account-link {
+    display: none;
+  }
+}

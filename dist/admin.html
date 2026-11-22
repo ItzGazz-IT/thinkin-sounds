@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#09090b">
+  <title>Booking Admin | Thinkin’ Sounds</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="logo-fix.css?v=booking-admin">
+  <link rel="stylesheet" href="account.css?v=booking-admin">
+  <script type="module" src="admin.js"></script>
+</head>
+<body class="inner-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header account-header">
+    <a class="brand" href="index.html" aria-label="Thinkin’ Sounds home"><img src="assets/logos/logo-color-transparent.webp" alt="Thinkin’ Sounds" width="500" height="500"></a>
+    <a href="account.html">Studio account</a>
+  </header>
+  <main class="account-main" id="main">
+    <p class="eyebrow">Studio staff</p>
+    <h1>Booking admin</h1>
+    <p id="admin-status" role="status" aria-live="polite">Checking staff access…</p>
+    <p id="admin-login" hidden><a class="button" href="account.html">Sign in to your studio account</a></p>
+    <section id="admin-bookings" hidden aria-labelledby="requests-heading">
+      <div class="account-session">
+        <h2 id="requests-heading">Booking requests</h2>
+        <button id="refresh-bookings" class="account-text-button" type="button">Refresh</button>
+      </div>
+      <p>Confirm a request after agreeing on the session and deposit. Confirmation queues an email to the customer.</p>
+      <ul id="admin-booking-list" class="account-bookings"></ul>
+      <div class="account-actions">
+        <button id="previous-bookings" type="button" class="button button-light" disabled>Previous</button>
+        <button id="next-bookings" type="button" class="button button-light" disabled>Next</button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

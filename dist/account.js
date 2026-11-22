@@ -109,6 +109,7 @@ function showSession(event, nextSession) {
   if (bookings.hidden) {
     availabilityRequest++;
     bookingRequest++;
+    get('staff-bookings').hidden = true;
     slots.replaceChildren();
     bookingList.replaceChildren();
     return;
@@ -118,6 +119,10 @@ function showSession(event, nextSession) {
     date.min = studioDate(0);
     date.max = studioDate(90);
     date.value = date.min;
+    const userId = session.user.id;
+    void client.rpc('is_studio_admin').then(({ data }) => {
+      if (session?.user.id === userId) get('staff-bookings').hidden = data !== true;
+    });
     void loadAvailability();
     void loadBookings();
   }
