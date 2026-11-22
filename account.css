@@ -117,3 +117,34 @@
 #admin-bookings > .account-actions {
   margin-top: 20px;
 }
+
+.decline-dialog {
+  width: min(calc(100% - 32px), 520px);
+  max-height: calc(100% - 32px);
+  padding: 0;
+  border: 1px solid #ffffff40;
+  border-radius: 12px;
+  color: var(--white);
+  background: #141318;
+}
+
+.decline-dialog::backdrop {
+  background: #09090bc9;
+}
+
+.decline-dialog form {
+  grid-template-columns: minmax(0, 1fr);
+  padding: clamp(18px, 5vw, 32px);
+}
+
+.decline-dialog h2 {
+  margin: 0;
+}
+
+.decline-dialog .field {
+  grid-column: 1;
+}
+
+.decline-dialog textarea {
+  resize: vertical;
+}

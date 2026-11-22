@@ -9,8 +9,8 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="logo-fix.css?v=booking-admin">
-  <link rel="stylesheet" href="account.css?v=booking-admin">
-  <script type="module" src="admin.js"></script>
+  <link rel="stylesheet" href="account.css?v=booking-declines">
+  <script type="module" src="admin.js?v=booking-declines"></script>
 </head>
 <body class="inner-page">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -28,7 +28,7 @@
         <h2 id="requests-heading">Booking requests</h2>
         <button id="refresh-bookings" class="account-text-button" type="button">Refresh</button>
       </div>
-      <p>Confirm a request after agreeing on the session and deposit. Confirmation queues an email to the customer.</p>
+      <p>Confirm a request after agreeing on the session and deposit. Customers receive an email when you confirm or decline.</p>
       <ul id="admin-booking-list" class="account-bookings"></ul>
       <div class="account-actions">
         <button id="previous-bookings" type="button" class="button button-light" disabled>Previous</button>
@@ -36,5 +36,18 @@
       </div>
     </section>
   </main>
+  <dialog class="decline-dialog" id="decline-dialog" aria-labelledby="decline-heading">
+    <form id="decline-form">
+      <h2 id="decline-heading">Decline booking request</h2>
+      <div class="field">
+        <label for="decline-reason">Reason for the customer</label>
+        <textarea id="decline-reason" rows="4" maxlength="500" required autofocus></textarea>
+      </div>
+      <div class="account-actions">
+        <button id="submit-decline" class="button" type="submit">Decline and email customer</button>
+        <button id="cancel-decline" class="account-text-button" type="button">Cancel</button>
+      </div>
+    </form>
+  </dialog>
 </body>
 </html>
