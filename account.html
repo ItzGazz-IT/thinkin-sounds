@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="logo-fix.css?v=plain-controls">
   <link rel="stylesheet" href="account.css">
-  <script type="module" src="account.js"></script>
+  <script type="module" src="account.js?v=booking-admin"></script>
 </head>
 <body class="inner-page">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -42,7 +42,7 @@
       </form>
     </section>
     <section id="booking-panel" hidden aria-labelledby="booking-heading">
-      <div class="account-session"><p id="signed-in-email"></p><button type="button" class="account-text-button" id="sign-out">Sign out</button></div>
+      <div class="account-session"><p id="signed-in-email"></p><a id="staff-bookings" href="admin.html" hidden>Booking admin</a><button type="button" class="account-text-button" id="sign-out">Sign out</button></div>
       <h2 id="booking-heading">Book studio time</h2>
       <p>Recording sessions only. The studio confirms your booking after agreeing the scope and deposit.</p>
       <p>Friday 17:00–midnight, Saturday 08:00–20:00, Sunday 08:00–17:00. All times are SAST.</p>

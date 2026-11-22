@@ -104,3 +104,16 @@
     grid-column: 1;
   }
 }
+
+.admin-booking-details {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.admin-booking-details p {
+  margin: 4px 0;
+}
+
+#admin-bookings > .account-actions {
+  margin-top: 20px;
+}
